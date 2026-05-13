@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="popup.css">
+  <title>Productivity Flow</title>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Productivity <span>Flow</span></h1>
+      <div class="status-badge">Tracking Active</div>
+    </header>
+
+    <main>
+      <div class="stats-card">
+        <div class="stat-item">
+          <span class="label">Today</span>
+          <span class="value" id="today-time">0h 0m</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress" id="daily-progress" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="current-site">
+        <span class="label">Current Site</span>
+        <span class="value" id="current-domain">None</span>
+      </div>
+
+      <div class="actions">
+        <button id="toggle-focus" class="btn primary">Start Focus Mode</button>
+        <button id="open-dashboard" class="btn secondary">View Full Report</button>
+      </div>
+    </main>
+
+    <footer>
+      <p>Stay focused, stay productive.</p>
+    </footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

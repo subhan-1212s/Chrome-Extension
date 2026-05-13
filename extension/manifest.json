@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Productivity Flow Tracker",
+  "version": "1.0",
+  "description": "Monitor time, block distractions, and boost productivity.",
+  "permissions": [
+    "tabs",
+    "storage",
+    "declarativeNetRequest",
+    "alarms"
+  ],
+  "host_permissions": [
+    "http://localhost:5000/*",
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "ruleset_1",
+      "enabled": true,
+      "path": "rules.json"
+    }]
+  }
+}
