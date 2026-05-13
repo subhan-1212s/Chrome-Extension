@@ -1,5 +1,7 @@
 # Productivity Flow Tracker (MERN + Chrome Extension)
 
+![Productivity Flow Preview](https://images.unsplash.com/photo-1484417894907-623942c8ee29?q=80&w=2000&auto=format&fit=crop)
+
 A premium productivity tracking system that monitors web usage, blocks distractions, and provides detailed insights through a synchronized dashboard.
 
 ## 🚀 Features
