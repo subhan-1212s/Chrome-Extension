@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://chrome-extension-ts0n.onrender.com/api';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -405,7 +405,6 @@ const App = () => {
           transition={{ duration: 0.3 }}
         >
           <div className="auth-header">
-            <span className="brand-dot"></span>
             <h2>FocusFlow <span>AI</span></h2>
             <p className="auth-subtitle">Elevate your cognitive workspace</p>
           </div>
