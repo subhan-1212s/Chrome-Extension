@@ -3,7 +3,10 @@ let activeStartTime = null;
 let activeDomain = null;
 
 const API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
-const USER_ID = 'user_demo@example.com';
+let USER_ID = 'user_demo@example.com';
+chrome.storage.local.get('user_id', (items) => {
+  if (items.user_id) USER_ID = items.user_id;
+});
 
 // Pomodoro Timer State
 let pomoTimeLeft = 25 * 60; // 25 minutes default
@@ -319,6 +322,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   else if (message.action === 'REFRESH_BLOCKING_RULES') {
     updateBlockingRules();
     sendResponse({ success: true });
+  }
+  
+  else if (message.action === 'SYNC_USER') {
+    if (message.userId) {
+      USER_ID = message.userId;
+      chrome.storage.local.set({ user_id: message.userId }, () => {
+        updateBlockingRules();
+      });
+      sendResponse({ success: true });
+    }
   }
 
   else if (message.action === 'RESTORE_WORKSPACE') {

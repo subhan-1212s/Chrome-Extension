@@ -1,108 +1,114 @@
 const API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
-const USER_ID = 'user_demo@example.com';
+let USER_ID = 'user_demo@example.com';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Initial draw
-  updateUI();
-  syncPomodoroState();
-  
-  // Set up periodic update
-  const interval = setInterval(() => {
+  let interval;
+  chrome.storage.local.get('user_id', async (items) => {
+    if (items.user_id) USER_ID = items.user_id;
+
+    // Initial draw
     updateUI();
     syncPomodoroState();
-  }, 1000);
-
-  // Open Full Dashboard
-  document.getElementById('open-dashboard').addEventListener('click', () => {
-    chrome.tabs.create({ url: 'http://localhost:5173' });
-  });
-
-  // Toggle Focus Mode
-  document.getElementById('toggle-focus').addEventListener('click', async () => {
-    const btn = document.getElementById('toggle-focus');
-    const isFocus = btn.innerText.includes('Stop') || btn.innerText.includes('Disable');
     
-    try {
-      const prefResponse = await fetch(`${API_URL}/preferences/${USER_ID}`);
-      const pref = await prefResponse.json();
+    // Set up periodic update
+    interval = setInterval(() => {
+      updateUI();
+      syncPomodoroState();
+    }, 1000);
+
+    // Open Full Dashboard
+    document.getElementById('open-dashboard').addEventListener('click', () => {
+      // In production, users will click dashboard to go to Vercel. We can default to localhost for development
+      chrome.tabs.create({ url: 'http://localhost:5173' });
+    });
+
+    // Toggle Focus Mode
+    document.getElementById('toggle-focus').addEventListener('click', async () => {
+      const btn = document.getElementById('toggle-focus');
+      const isFocus = btn.innerText.includes('Stop') || btn.innerText.includes('Disable');
       
-      const response = await fetch(`${API_URL}/preferences`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: USER_ID,
-          focusMode: !isFocus,
-          blockedSites: pref.blockedSites
-        })
-      });
-      const data = await response.json();
-      updateFocusUI(data.focusMode);
-      
-      // Let background script know to refresh rules immediately
-      chrome.runtime.sendMessage({ action: 'REFRESH_BLOCKING_RULES' });
-    } catch (e) {
-      console.error(e);
-    }
-  });
-
-  // Quick Block/Unblock Website
-  document.getElementById('quick-block-btn').addEventListener('click', async () => {
-    const domainSpan = document.getElementById('current-domain');
-    const domain = domainSpan.innerText;
-    if (domain === 'None' || !domain) return;
-
-    try {
-      const prefResponse = await fetch(`${API_URL}/preferences/${USER_ID}`);
-      let pref = await prefResponse.json();
-      let blockedSites = pref.blockedSites || [];
-
-      if (blockedSites.includes(domain)) {
-        blockedSites = blockedSites.filter(s => s !== domain);
-      } else {
-        blockedSites.push(domain);
+      try {
+        const prefResponse = await fetch(`${API_URL}/preferences/${USER_ID}`);
+        const pref = await prefResponse.json();
+        
+        const response = await fetch(`${API_URL}/preferences`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: USER_ID,
+            focusMode: !isFocus,
+            blockedSites: pref.blockedSites
+          })
+        });
+        const data = await response.json();
+        updateFocusUI(data.focusMode);
+        
+        // Let background script know to refresh rules immediately
+        chrome.runtime.sendMessage({ action: 'REFRESH_BLOCKING_RULES' });
+      } catch (e) {
+        console.error(e);
       }
+    });
 
-      const response = await fetch(`${API_URL}/preferences`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: USER_ID,
-          blockedSites: blockedSites
-        })
+    // Quick Block/Unblock Website
+    document.getElementById('quick-block-btn').addEventListener('click', async () => {
+      const domainSpan = document.getElementById('current-domain');
+      const domain = domainSpan.innerText;
+      if (domain === 'None' || !domain) return;
+
+      try {
+        const prefResponse = await fetch(`${API_URL}/preferences/${USER_ID}`);
+        let pref = await prefResponse.json();
+        let blockedSites = pref.blockedSites || [];
+
+        if (blockedSites.includes(domain)) {
+          blockedSites = blockedSites.filter(s => s !== domain);
+        } else {
+          blockedSites.push(domain);
+        }
+
+        const response = await fetch(`${API_URL}/preferences`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: USER_ID,
+            blockedSites: blockedSites
+          })
+        });
+        const data = await response.json();
+        
+        // Notify background to update declarativeNetRequest rules
+        chrome.runtime.sendMessage({ action: 'REFRESH_BLOCKING_RULES' });
+        
+        // Update quick block button text
+        updateQuickBlockUI(domain, blockedSites);
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    // Pomodoro Controls Message Passing
+    document.getElementById('pomo-start').addEventListener('click', () => {
+      chrome.runtime.sendMessage({ action: 'START_POMODORO' }, () => {
+        syncPomodoroState();
       });
-      const data = await response.json();
-      
-      // Notify background to update declarativeNetRequest rules
-      chrome.runtime.sendMessage({ action: 'REFRESH_BLOCKING_RULES' });
-      
-      // Update quick block button text
-      updateQuickBlockUI(domain, blockedSites);
-    } catch (e) {
-      console.error(e);
-    }
-  });
-
-  // Pomodoro Controls Message Passing
-  document.getElementById('pomo-start').addEventListener('click', () => {
-    chrome.runtime.sendMessage({ action: 'START_POMODORO' }, () => {
-      syncPomodoroState();
     });
-  });
 
-  document.getElementById('pomo-pause').addEventListener('click', () => {
-    chrome.runtime.sendMessage({ action: 'PAUSE_POMODORO' }, () => {
-      syncPomodoroState();
+    document.getElementById('pomo-pause').addEventListener('click', () => {
+      chrome.runtime.sendMessage({ action: 'PAUSE_POMODORO' }, () => {
+        syncPomodoroState();
+      });
     });
-  });
 
-  document.getElementById('pomo-reset').addEventListener('click', () => {
-    chrome.runtime.sendMessage({ action: 'RESET_POMODORO' }, () => {
-      syncPomodoroState();
+    document.getElementById('pomo-reset').addEventListener('click', () => {
+      chrome.runtime.sendMessage({ action: 'RESET_POMODORO' }, () => {
+        syncPomodoroState();
+      });
     });
-  });
 
-  // Cleanup on close
-  window.addEventListener('unload', () => clearInterval(interval));
+    // Cleanup on close
+    window.addEventListener('unload', () => clearInterval(interval));
+  });
 });
 
 // Sync Pomodoro UI with Background state

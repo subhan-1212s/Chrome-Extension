@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
   blockedSites: [{ type: String }],
   focusMode: { type: Boolean, default: false },
   dailyGoal: { type: Number, default: 480 }, // in minutes (8 hours)

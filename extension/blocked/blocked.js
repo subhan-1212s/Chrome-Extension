@@ -1,5 +1,5 @@
 const API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
-const USER_ID = 'user_demo@example.com';
+let USER_ID = 'user_demo@example.com';
 
 const QUOTES = [
   { text: "Concentrate all your thoughts upon the work at hand. The sun's rays do not burn until brought to a focus.", author: "Alexander Graham Bell" },
@@ -13,6 +13,9 @@ const QUOTES = [
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
+  chrome.storage.local.get('user_id', (items) => {
+    if (items.user_id) USER_ID = items.user_id;
+  });
   // Set Random Quote
   setRandomQuote();
   

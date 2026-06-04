@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const Activity = require('./models/Activity');
@@ -46,13 +47,65 @@ app.get('/api/stats/:userId', async (req, res) => {
   }
 });
 
+// --- AUTHENTICATION ENDPOINTS ---
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email is already registered' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      email,
+      password: hashedPassword,
+      blockedSites: [],
+      dailyGoal: 480
+    });
+    await user.save();
+
+    res.status(201).json({ email: user.email, message: 'Registration successful' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid email or password' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Invalid email or password' });
+    }
+
+    res.json({ email: user.email, message: 'Login successful' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // --- PREFERENCES & USER ENDPOINTS ---
 app.get('/api/preferences/:email', async (req, res) => {
   try {
     const user = await User.findOne({ email: req.params.email });
     if (!user) {
-        // Create user if doesn't exist for simplicity in this demo
-        const newUser = new User({ email: req.params.email, blockedSites: [], dailyGoal: 480 });
+        // Create user if doesn't exist for simplicity in this demo (with hashed dummy password)
+        const dummyHashed = await bcrypt.hash('focusflow123', 10);
+        const newUser = new User({ email: req.params.email, password: dummyHashed, blockedSites: [], dailyGoal: 480 });
         await newUser.save();
         return res.json(newUser);
     }

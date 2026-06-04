@@ -12,7 +12,6 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-const USER_ID = 'user_demo@example.com';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -39,8 +38,16 @@ const itemVariants = {
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(localStorage.getItem('focusflow_user') || '');
+  const [loading, setLoading] = useState(userId ? true : false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Authentication State
+  const [authTab, setAuthTab] = useState('signin'); // 'signin' | 'register'
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
 
   // Core MERN State
   const [stats, setStats] = useState([]);
@@ -63,20 +70,77 @@ const App = () => {
   const [saveWorkspaceName, setSaveWorkspaceName] = useState('');
 
   useEffect(() => {
-    fetchData();
+    if (userId) {
+      fetchData();
+    }
     // Load local storage Gemini key if present
     const savedKey = localStorage.getItem('gemini_key') || '';
     setGeminiKey(savedKey);
-  }, []);
+  }, [userId]);
+
+  // Auth actions
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    setAuthError('');
+    setAuthLoading(true);
+
+    if (!authEmail.trim() || !authPassword.trim()) {
+      setAuthError('Email and password are required');
+      setAuthLoading(false);
+      return;
+    }
+
+    try {
+      const endpoint = authTab === 'signin' ? '/auth/login' : '/auth/register';
+      const res = await axios.post(`${API_URL}${endpoint}`, {
+        email: authEmail.trim(),
+        password: authPassword.trim()
+      });
+
+      if (res.data && res.data.email) {
+        const loggedInEmail = res.data.email;
+        localStorage.setItem('focusflow_user', loggedInEmail);
+        setUserId(loggedInEmail);
+        
+        // Sync with Chrome Extension if present
+        if (window.chrome && window.chrome.runtime) {
+          window.chrome.runtime.sendMessage({ 
+            action: 'SYNC_USER', 
+            userId: loggedInEmail 
+          });
+        }
+      }
+    } catch (err) {
+      const msg = err.response?.data?.error || 'Authentication failed. Please try again.';
+      setAuthError(msg);
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem('focusflow_user');
+    setUserId('');
+    setStats([]);
+    setTasks([]);
+    setNotes([]);
+    setSessions([]);
+    if (window.chrome && window.chrome.runtime) {
+      window.chrome.runtime.sendMessage({ 
+        action: 'SYNC_USER', 
+        userId: 'user_demo@example.com' 
+      });
+    }
+  };
 
   const fetchData = async () => {
     try {
       const [statsRes, prefRes, tasksRes, notesRes, sessionsRes] = await Promise.all([
-        axios.get(`${API_URL}/stats/${USER_ID}`),
-        axios.get(`${API_URL}/preferences/${USER_ID}`),
-        axios.get(`${API_URL}/tasks/${USER_ID}`),
-        axios.get(`${API_URL}/notes/${USER_ID}`),
-        axios.get(`${API_URL}/sessions/${USER_ID}`)
+        axios.get(`${API_URL}/stats/${userId}`),
+        axios.get(`${API_URL}/preferences/${userId}`),
+        axios.get(`${API_URL}/tasks/${userId}`),
+        axios.get(`${API_URL}/notes/${userId}`),
+        axios.get(`${API_URL}/sessions/${userId}`)
       ]);
       
       setStats(statsRes.data);
@@ -96,7 +160,7 @@ const App = () => {
   const toggleFocusMode = async () => {
     try {
       const res = await axios.put(`${API_URL}/preferences`, {
-        email: USER_ID,
+        email: userId,
         focusMode: !preferences.focusMode,
         blockedSites: preferences.blockedSites
       });
@@ -118,7 +182,7 @@ const App = () => {
 
     try {
       const res = await axios.post(`${API_URL}/tasks`, {
-        userId: USER_ID,
+        userId: userId,
         title: newTaskTitle,
         description: newTaskDesc,
         priority: newTaskPriority,
@@ -179,7 +243,7 @@ const App = () => {
     try {
       const updatedList = [...preferences.blockedSites, site];
       const res = await axios.put(`${API_URL}/preferences`, {
-        email: USER_ID,
+        email: userId,
         blockedSites: updatedList
       });
       setPreferences(res.data);
@@ -198,7 +262,7 @@ const App = () => {
     try {
       const updatedList = preferences.blockedSites.filter(s => s !== siteToRemove);
       const res = await axios.put(`${API_URL}/preferences`, {
-        email: USER_ID,
+        email: userId,
         blockedSites: updatedList
       });
       setPreferences(res.data);
@@ -216,7 +280,7 @@ const App = () => {
     setNewDailyGoal(val);
     try {
       const res = await axios.put(`${API_URL}/preferences`, {
-        email: USER_ID,
+        email: userId,
         dailyGoal: parseInt(val, 10)
       });
       setPreferences(res.data);
@@ -282,7 +346,7 @@ const App = () => {
   const saveSessionToDB = async (name, tabs) => {
     try {
       const res = await axios.post(`${API_URL}/sessions`, {
-        userId: USER_ID,
+        userId: userId,
         name: name,
         tabs: tabs
       });
@@ -329,6 +393,86 @@ const App = () => {
       </div>
     </div>
   );
+
+  if (!userId) {
+    return (
+      <div className="auth-layout min-h-screen flex items-center justify-center bg-slate-950 text-white">
+        <div className="auth-overlay"></div>
+        <motion.div 
+          className="glass-card auth-card"
+          initial={{ opacity: 0, scale: 0.95, y: 15 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="auth-header">
+            <span className="brand-dot"></span>
+            <h2>FocusFlow <span>AI</span></h2>
+            <p className="auth-subtitle">Elevate your cognitive workspace</p>
+          </div>
+
+          <div className="auth-tabs">
+            <button 
+              onClick={() => { setAuthTab('signin'); setAuthError(''); }}
+              className={`auth-tab-btn ${authTab === 'signin' ? 'active' : ''}`}
+            >
+              Sign In
+            </button>
+            <button 
+              onClick={() => { setAuthTab('register'); setAuthError(''); }}
+              className={`auth-tab-btn ${authTab === 'register' ? 'active' : ''}`}
+            >
+              Create Account
+            </button>
+          </div>
+
+          {authError && (
+            <motion.div 
+              className="auth-error"
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <AlertCircle size={16} />
+              <span>{authError}</span>
+            </motion.div>
+          )}
+
+          <form onSubmit={handleAuthSubmit} className="auth-form">
+            <div className="form-group">
+              <label>Email Address</label>
+              <input 
+                type="email" 
+                className="input-field" 
+                placeholder="you@domain.com"
+                value={authEmail}
+                onChange={(e) => setAuthEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Password</label>
+              <input 
+                type="password" 
+                className="input-field" 
+                placeholder="••••••••"
+                value={authPassword}
+                onChange={(e) => setAuthPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <button type="submit" className="btn btn-primary w-full mt-4" disabled={authLoading}>
+              {authLoading ? 'Validating credentials...' : authTab === 'signin' ? 'Access Workspace' : 'Initialize Account'}
+            </button>
+          </form>
+          
+          <div className="auth-footer">
+            <p>Protected by secure cloud database encryption.</p>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-layout">
@@ -383,12 +527,21 @@ const App = () => {
         </nav>
 
         <div className="nav-footer">
-          <div className="user-profile">
-            <div className="avatar">SD</div>
-            <div className="profile-info">
-              <span className="profile-name">Demo User</span>
-              <span className="profile-role">Productivity Pro</span>
+          <div className="user-profile flex flex-col gap-2">
+            <div className="flex items-center gap-2.5 w-full">
+              <div className="avatar">{userId.substring(0, 2).toUpperCase()}</div>
+              <div className="profile-info truncate" style={{ maxWidth: '140px' }}>
+                <span className="profile-name truncate font-bold text-slate-200" title={userId}>{userId.split('@')[0]}</span>
+                <span className="profile-role">Workspace User</span>
+              </div>
             </div>
+            <button 
+              onClick={handleSignOut}
+              className="btn btn-secondary w-full text-xs flex items-center justify-center"
+              style={{ padding: '6px 12px', minHeight: 'auto', border: '1px solid rgba(214, 140, 140, 0.15)', color: 'var(--rose)', fontSize: '0.75rem', borderRadius: '10px' }}
+            >
+              Sign Out
+            </button>
           </div>
         </div>
       </aside>

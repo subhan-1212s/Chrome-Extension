@@ -1,11 +1,14 @@
 const API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
-const USER_ID = 'user_demo@example.com';
+let USER_ID = 'user_demo@example.com';
 
 let currentTabDomain = '';
 let currentTabUrl = '';
 let currentTabTitle = '';
 
 document.addEventListener('DOMContentLoaded', () => {
+  chrome.storage.local.get('user_id', (items) => {
+    if (items.user_id) USER_ID = items.user_id;
+  });
   // 1. Tab Switching Logic
   const tabs = document.querySelectorAll('.tab-btn');
   const panes = document.querySelectorAll('.tab-pane');
