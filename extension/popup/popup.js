@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
 const USER_ID = 'user_demo@example.com';
 
 document.addEventListener('DOMContentLoaded', async () => {

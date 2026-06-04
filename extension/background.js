@@ -2,7 +2,7 @@ let activeTabId = null;
 let activeStartTime = null;
 let activeDomain = null;
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
 const USER_ID = 'user_demo@example.com';
 
 // Pomodoro Timer State
