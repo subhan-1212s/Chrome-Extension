@@ -251,6 +251,9 @@ async function fetchTasks() {
         </div>
         <span class="task-text ${task.completed ? 'completed' : ''}">${escapeHtml(task.title)}</span>
         <span class="task-priority-tag ${task.priority}">${task.priority}</span>
+        <button class="task-delete" data-id="${task._id}" title="Delete Task">
+          <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        </button>
       `;
       
       // Wire checkoff trigger
@@ -270,6 +273,28 @@ async function fetchTasks() {
           row.querySelector('.task-text').classList.toggle('completed');
         } catch (err) {
           console.error('Failed to update task checkoff:', err);
+        }
+      });
+
+      // Wire delete trigger
+      row.querySelector('.task-delete').addEventListener('click', async (e) => {
+        const button = e.currentTarget;
+        const taskId = button.getAttribute('data-id');
+        if (confirm('Are you sure you want to delete this task?')) {
+          try {
+            const res = await fetch(`${API_URL}/tasks/${taskId}`, {
+              method: 'DELETE'
+            });
+            if (res.ok) {
+              row.remove();
+              // If empty now, show empty state
+              if (container.querySelectorAll('.task-row').length === 0) {
+                container.innerHTML = '<div class="empty-state">No pending tasks for today. Add one above!</div>';
+              }
+            }
+          } catch (err) {
+            console.error('Failed to delete task:', err);
+          }
         }
       });
 
