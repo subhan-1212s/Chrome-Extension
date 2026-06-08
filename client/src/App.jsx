@@ -477,7 +477,6 @@ const App = () => {
       <aside className={`sidebar-nav ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="brand">
           <div className="brand-logo-wrapper">
-            <span className="brand-dot"></span>
             <h2>FocusFlow <span>AI</span></h2>
           </div>
           <button className="mobile-close-btn" onClick={() => setIsMobileMenuOpen(false)} title="Close navigation">
@@ -546,7 +545,6 @@ const App = () => {
             <Menu size={22} />
           </button>
           <div className="mobile-brand">
-            <span className="brand-dot"></span>
             <h2>FocusFlow <span>AI</span></h2>
           </div>
           <div style={{ width: 22 }}></div> {/* balancer spacer */}
