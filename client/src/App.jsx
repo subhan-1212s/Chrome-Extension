@@ -290,15 +290,12 @@ const App = () => {
 
   // Workspace restore
   const handleRestoreWorkspace = (session) => {
-    if (window.chrome && window.chrome.runtime) {
-      window.chrome.runtime.sendMessage({
-        action: 'RESTORE_WORKSPACE',
+    const hasExtension = document.documentElement.getAttribute('data-focusflow-extension') === 'true';
+    if (hasExtension) {
+      window.postMessage({
+        action: 'FOCUSFLOW_RESTORE_WORKSPACE',
         tabs: session.tabs
-      }, (response) => {
-        if (response && response.success) {
-          console.log(`Workspace ${session.name} restored successfully`);
-        }
-      });
+      }, '*');
     } else {
       // Plain browser fallback: Open all in new tabs
       session.tabs.forEach(t => {
@@ -309,30 +306,47 @@ const App = () => {
 
   const handleSaveWorkspaceSession = async (e) => {
     e.preventDefault();
-    if (!saveWorkspaceName.trim()) return;
+    const name = saveWorkspaceName.trim();
+    if (!name) return;
 
-    // In a real extension, we query active tabs. Here we'll read them from chrome.tabs
-    // or simulate if opened inside regular browser.
-    let tabList = [
-      { title: "React Dev Docs", url: "https://react.dev" },
-      { title: "GitHub", url: "https://github.com" },
-      { title: "Gemini AI Studio", url: "https://aistudio.google.com" }
-    ];
+    const hasExtension = document.documentElement.getAttribute('data-focusflow-extension') === 'true';
+    
+    if (hasExtension) {
+      // Set a timeout. If the extension doesn't respond in 800ms, use the fallback list.
+      const fallbackTimeout = setTimeout(() => {
+        console.log("Extension did not respond, using fallback simulated tab list.");
+        let fallbackTabs = [
+          { title: "React Dev Docs", url: "https://react.dev" },
+          { title: "GitHub", url: "https://github.com" },
+          { title: "Gemini AI Studio", url: "https://aistudio.google.com" }
+        ];
+        saveSessionToDB(name, fallbackTabs);
+      }, 800);
 
-    if (window.chrome && window.chrome.tabs) {
-      window.chrome.tabs.query({ currentWindow: true }, async (tabs) => {
-        const extTabs = tabs.filter(t => t.url.startsWith('http')).map(t => ({
-          title: t.title || 'Tab',
-          url: t.url
-        }));
-        if (extTabs.length > 0) {
-          saveSessionToDB(saveWorkspaceName, extTabs);
-        } else {
-          saveSessionToDB(saveWorkspaceName, tabList);
+      // Register a one-time event handler for this response
+      const handleResponse = (event) => {
+        if (event.data && event.data.action === 'FOCUSFLOW_TABS_RESPOND' && event.data.name === name) {
+          clearTimeout(fallbackTimeout);
+          window.removeEventListener('message', handleResponse);
+          saveSessionToDB(name, event.data.tabs || []);
         }
-      });
+      };
+
+      window.addEventListener('message', handleResponse);
+
+      // Send capture tabs request to content.js
+      window.postMessage({
+        action: 'FOCUSFLOW_CAPTURE_TABS',
+        name: name
+      }, '*');
     } else {
-      saveSessionToDB(saveWorkspaceName, tabList);
+      // Standalone browser fallback: save simulated list
+      let fallbackTabs = [
+        { title: "React Dev Docs", url: "https://react.dev" },
+        { title: "GitHub", url: "https://github.com" },
+        { title: "Gemini AI Studio", url: "https://aistudio.google.com" }
+      ];
+      saveSessionToDB(name, fallbackTabs);
     }
   };
 
@@ -343,7 +357,7 @@ const App = () => {
         name: name,
         tabs: tabs
       });
-      setSessions([res.data, ...sessions]);
+      setSessions(prev => [res.data, ...prev]);
       setSaveWorkspaceName('');
     } catch (err) {
       console.error(err);

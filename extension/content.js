@@ -1,5 +1,9 @@
-const BACKEND_API = 'http://localhost:5000/api';
-const CURRENT_USER = 'user_demo@example.com';
+let BACKEND_API = 'https://chrome-extension-ts0n.onrender.com/api';
+let CURRENT_USER = 'user_demo@example.com';
+
+chrome.storage.local.get('user_id', (items) => {
+  if (items.user_id) CURRENT_USER = items.user_id;
+});
 
 let sidebarContainer = null;
 let shadowRoot = null;
@@ -123,31 +127,34 @@ function removeSelectionTooltip() {
 
 // Save Clipped text selection to backend DB
 async function saveHighlight(text) {
-  const note = {
-    userId: CURRENT_USER,
-    url: window.location.href,
-    domain: window.location.hostname,
-    title: document.title || 'Web Clipping',
-    content: text,
-    tags: ['Highlight']
-  };
+  chrome.storage.local.get('user_id', async (items) => {
+    const activeUser = items.user_id || CURRENT_USER;
+    const note = {
+      userId: activeUser,
+      url: window.location.href,
+      domain: window.location.hostname,
+      title: document.title || 'Web Clipping',
+      content: text,
+      tags: ['Highlight']
+    };
 
-  try {
-    const response = await fetch(`${BACKEND_API}/notes`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(note)
-    });
+    try {
+      const response = await fetch(`${BACKEND_API}/notes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(note)
+      });
 
-    if (response.ok) {
-      showToast('Selection saved to FocusFlow Knowledge Hub! ⚡');
-      
-      // Let sidebar know if it is open to refresh list
-      sidebarIframe.contentWindow.postMessage({ action: 'REFRESH_NOTES' }, '*');
+      if (response.ok) {
+        showToast('Selection saved to FocusFlow Knowledge Hub! ⚡');
+        
+        // Let sidebar know if it is open to refresh list
+        sidebarIframe.contentWindow.postMessage({ action: 'REFRESH_NOTES' }, '*');
+      }
+    } catch (err) {
+      console.error('FocusFlow clipping sync failed:', err);
     }
-  } catch (err) {
-    console.error('FocusFlow clipping sync failed:', err);
-  }
+  });
 }
 
 function showToast(message) {
@@ -167,7 +174,7 @@ function showToast(message) {
   }, 3000);
 }
 
-// Receive messages from sidebar Iframe
+// Receive messages from host page or sidebar
 function handleIframeMessages(e) {
   if (e.data && e.data.action === 'GET_PAGE_DATA') {
     // Gather parent page raw content blocks for AI summarizer
@@ -194,7 +201,31 @@ function handleIframeMessages(e) {
   else if (e.data && e.data.action === 'CLOSE_SIDEBAR') {
     toggleSidebar();
   }
+
+  // Bridge messages from the webpage to the background script for workspaces
+  else if (e.data && e.data.action === 'FOCUSFLOW_CAPTURE_TABS') {
+    const name = e.data.name;
+    chrome.runtime.sendMessage({ action: 'GET_ACTIVE_TABS' }, (response) => {
+      if (response && response.tabs) {
+        window.postMessage({
+          action: 'FOCUSFLOW_TABS_RESPOND',
+          tabs: response.tabs,
+          name: name
+        }, '*');
+      }
+    });
+  }
+  
+  else if (e.data && e.data.action === 'FOCUSFLOW_RESTORE_WORKSPACE') {
+    chrome.runtime.sendMessage({
+      action: 'RESTORE_WORKSPACE',
+      tabs: e.data.tabs
+    });
+  }
 }
+
+// Set global indicator attribute so webpage knows the extension is active
+document.documentElement.setAttribute('data-focusflow-extension', 'true');
 
 // Launch Injection
 init();

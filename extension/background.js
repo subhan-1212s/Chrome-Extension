@@ -334,6 +334,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
   }
 
+  else if (message.action === 'GET_ACTIVE_TABS') {
+    chrome.tabs.query({ currentWindow: true }, (tabs) => {
+      const filteredTabs = tabs
+        .filter(t => t.url && t.url.startsWith('http'))
+        .map(t => ({ title: t.title || 'Tab', url: t.url }));
+      sendResponse({ success: true, tabs: filteredTabs });
+    });
+    return true; // Keep message channel open for async query
+  }
+
   else if (message.action === 'RESTORE_WORKSPACE') {
     const tabs = message.tabs || [];
     if (tabs.length > 0) {
