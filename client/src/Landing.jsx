@@ -452,9 +452,13 @@ const Landing = ({ onNavigate, isAuthenticated }) => {
       {/* Footer */}
       <footer className="landing-footer">
         <div className="footer-max-width">
-          <div className="footer-logo-row">
-            <div className="footer-logo-mini">FF</div>
-            <span className="footer-logo-text">FocusFlow AI</span>
+          <div className="landing-logo-group">
+            <div className="landing-logo-box">
+              <Sparkles size={16} />
+            </div>
+            <h2 className="landing-logo-text">
+              FocusFlow <span>AI</span>
+            </h2>
           </div>
           <p className="footer-copyright">© {new Date().getFullYear()} FocusFlow AI. MIT Licensed. Crafted with premium design aesthetics.</p>
           <div className="footer-links">

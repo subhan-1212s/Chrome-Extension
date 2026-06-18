@@ -1240,6 +1240,7 @@ input:checked + .slider:before {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  overflow-y: clip;
   background-color: var(--bg-dark);
   font-family: 'Outfit', sans-serif;
   color: var(--text-main);
@@ -1271,7 +1272,7 @@ input:checked + .slider:before {
 }
 
 .landing-glow-3 {
-  bottom: -10%;
+  bottom: 0;
   right: -10%;
   width: 700px;
   height: 700px;
