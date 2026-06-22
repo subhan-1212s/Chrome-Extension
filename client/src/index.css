@@ -2426,3 +2426,265 @@ input:checked + .slider:before {
   }
 }
 
+/* ==========================================
+   FocusFlow Premium Design System Additions
+   ========================================== */
+
+/* Premium Animations */
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+.star-twinkle {
+  animation: star-twinkle 3s ease-in-out infinite;
+}
+
+@keyframes shimmer-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer-sweep {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(197, 168, 128, 0.08) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer-sweep 6s infinite linear;
+}
+
+@keyframes float-element {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.float-element {
+  animation: float-element 5s ease-in-out infinite;
+}
+
+@keyframes breath-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(197, 168, 128, 0.15), inset 0 0 15px rgba(197, 168, 128, 0.05);
+    border-color: rgba(197, 168, 128, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(197, 168, 128, 0.3), inset 0 0 25px rgba(197, 168, 128, 0.15);
+    border-color: rgba(197, 168, 128, 0.35);
+  }
+}
+.breath-glow {
+  animation: breath-glow 4s ease-in-out infinite;
+}
+
+/* Apple-style Bento Grid Layout */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.bento-card {
+  background: rgba(10, 10, 12, 0.7);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(197, 168, 128, 0.12);
+  border-radius: 28px;
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bento-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(197, 168, 128, 0.06), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bento-card:hover::before {
+  opacity: 1;
+}
+
+.bento-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(197, 168, 128, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.bento-col-4 { grid-column: span 4; }
+.bento-col-5 { grid-column: span 5; }
+.bento-col-6 { grid-column: span 6; }
+.bento-col-7 { grid-column: span 7; }
+.bento-col-8 { grid-column: span 8; }
+.bento-row-2 { grid-row: span 2; }
+
+@media (max-width: 1024px) {
+  .bento-col-4, .bento-col-5, .bento-col-6, .bento-col-7, .bento-col-8 {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 768px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .bento-col-4, .bento-col-5, .bento-col-6, .bento-col-7, .bento-col-8 {
+    grid-column: span 1;
+  }
+}
+
+/* Stepper Timeline Styles */
+.stepper-timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 60px auto 0;
+  padding-left: 48px;
+}
+
+.stepper-timeline::before {
+  content: '';
+  position: absolute;
+  left: 17px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--primary) 0%, rgba(197, 168, 128, 0.05) 100%);
+}
+
+.stepper-step {
+  position: relative;
+  padding-bottom: 48px;
+  text-align: left;
+}
+
+.stepper-step:last-child {
+  padding-bottom: 0;
+}
+
+.stepper-badge {
+  position: absolute;
+  left: -48px;
+  top: 4px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0d0d0f;
+  border: 2px solid var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary);
+  box-shadow: 0 0 15px rgba(197, 168, 128, 0.2);
+  z-index: 2;
+  transition: all 0.3s;
+}
+
+.stepper-step:hover .stepper-badge {
+  background: var(--primary);
+  color: #050506;
+  box-shadow: 0 0 20px rgba(197, 168, 128, 0.4);
+}
+
+.stepper-content {
+  background: rgba(15, 15, 17, 0.4);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px 30px;
+  transition: all 0.3s;
+}
+
+.stepper-content:hover {
+  border-color: rgba(197, 168, 128, 0.2);
+  background: rgba(15, 15, 17, 0.6);
+  transform: translateX(4px);
+}
+
+.stepper-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 6px;
+}
+
+.stepper-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Focus Score Gauge styles */
+.focus-score-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+}
+
+.focus-score-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.focus-score-svg {
+  transform: rotate(-90deg);
+}
+
+.focus-score-bg-circle {
+  stroke: rgba(255, 255, 255, 0.03);
+}
+
+.focus-score-fill-circle {
+  stroke: url(#goldGradient);
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.focus-score-text-wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.focus-score-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1;
+}
+
+.focus-score-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.focus-score-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 16px;
+  line-height: 1.4;
+}
+
+/* Bar Chart customized container */
+.bar-chart-glow {
+  filter: drop-shadow(0px 0px 10px rgba(197, 168, 128, 0.15));
+}
+
+

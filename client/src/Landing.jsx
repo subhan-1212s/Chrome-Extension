@@ -265,62 +265,162 @@ const Landing = ({ onNavigate, isAuthenticated }) => {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
-            className="features-grid"
+            className="bento-grid"
           >
-            {/* Card 1: Time Tracking */}
+            {/* Bento Card 1: Browsing Analytics (Large: 8 cols) */}
             <motion.div 
               variants={itemVariants}
-              className="landing-feature-card"
+              className="bento-card bento-col-8 bento-row-2"
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+              }}
             >
-              <div className="feature-icon-box primary-icon">
-                <Clock size={20} />
+              <div>
+                <div className="feature-icon-box primary-icon">
+                  <Clock size={20} />
+                </div>
+                <h3 className="feature-card-title">Browsing Analytics</h3>
+                <p className="feature-card-desc">
+                  Automatically measure and categorize your tab interactions. Built-in duration processing prevents idle time skewing.
+                </p>
               </div>
-              <h3 className="feature-card-title">Browsing Analytics</h3>
-              <p className="feature-card-desc">
-                Automatically measure and categorize your tab interactions. Built-in duration processing prevents idle time skewing.
-              </p>
+
+              {/* Inline SVG Chart Visualization */}
+              <div className="mt-8 p-4 bg-black/40 border border-white/5 rounded-2xl h-[160px] relative overflow-hidden flex flex-col justify-between">
+                <div className="flex justify-between items-center text-[10px] text-slate-500 font-semibold tracking-wider">
+                  <span>LIVE PRODUCTIVITY FEED</span>
+                  <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ACTIVE</span>
+                </div>
+                <div className="flex-1 flex items-end gap-3 mt-4 h-[70px]">
+                  <div className="flex-1 flex flex-col gap-1.5">
+                    <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+                      <div className="bg-gradient-to-r from-amber-200 to-amber-500 h-full rounded-full w-[80%] transition-all duration-1000" style={{ width: '80%', height: '100%' }}></div>
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-bold">github.com</span>
+                  </div>
+                  <div className="flex-1 flex flex-col gap-1.5">
+                    <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+                      <div className="bg-gradient-to-r from-amber-200 to-amber-500 h-full rounded-full w-[45%] transition-all duration-1000" style={{ width: '45%', height: '100%' }}></div>
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-bold">stackoverflow.com</span>
+                  </div>
+                  <div className="flex-1 flex flex-col gap-1.5">
+                    <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+                      <div className="bg-rose-400/80 h-full rounded-full w-[20%] transition-all duration-1000" style={{ width: '20%', height: '100%' }}></div>
+                    </div>
+                    <span className="text-[10px] text-rose-400/80 font-bold">youtube.com (Blocked)</span>
+                  </div>
+                </div>
+              </div>
             </motion.div>
 
-            {/* Card 2: Site Blocking */}
+            {/* Bento Card 2: Site Blocking (Small: 4 cols) */}
             <motion.div 
               variants={itemVariants}
-              className="landing-feature-card"
+              className="bento-card bento-col-4"
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+              }}
             >
-              <div className="feature-icon-box rose-icon">
-                <Shield size={20} />
+              <div>
+                <div className="feature-icon-box rose-icon">
+                  <Shield size={20} />
+                </div>
+                <h3 className="feature-card-title">Active Shield</h3>
+                <p className="feature-card-desc">
+                  Redirect distracting URLs instantly using native Chrome network interception.
+                </p>
               </div>
-              <h3 className="feature-card-title">Active Shield Blocker</h3>
-              <p className="feature-card-desc">
-                Redirect distracting URLs instantly using native Chrome network interception. Sync focus blocklists securely to your MERN backend.
-              </p>
+
+              {/* Mini visual shield block indicator */}
+              <div className="mt-6 flex items-center justify-center h-[90px] border border-rose-500/10 rounded-2xl bg-rose-500/5 relative overflow-hidden">
+                <div className="absolute inset-0 bg-radial-gradient from-rose-500/10 to-transparent"></div>
+                <div className="flex flex-col items-center gap-1.5 z-10">
+                  <span className="text-[10px] font-bold text-rose-400 uppercase tracking-widest">Shield Engaged</span>
+                  <span className="text-xs text-white font-semibold">No distraction leakage</span>
+                </div>
+              </div>
             </motion.div>
 
-            {/* Card 3: Gemini AI */}
+            {/* Bento Card 3: Gemini AI (Medium: 5 cols) */}
             <motion.div 
               variants={itemVariants}
-              className="landing-feature-card"
+              className="bento-card bento-col-5"
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+              }}
             >
-              <div className="feature-icon-box gold-icon">
-                <Sparkles size={20} />
+              <div>
+                <div className="feature-icon-box gold-icon">
+                  <Sparkles size={20} />
+                </div>
+                <h3 className="feature-card-title">Gemini Companion</h3>
+                <p className="feature-card-desc">
+                  Highlight browser text for instantaneous summaries. Interact directly with Gemini AI side panel companion.
+                </p>
               </div>
-              <h3 className="feature-card-title">Gemini Assistant</h3>
-              <p className="feature-card-desc">
-                Highlight browser text for instantaneous summaries. Interact directly with Gemini AI side panel companion without changing tabs.
-              </p>
+
+              {/* Chat bubble visual indicator */}
+              <div className="mt-6 p-3 rounded-2xl bg-white/5 border border-white/5 flex flex-col gap-2">
+                <div className="flex items-center gap-1.5 text-[9px] text-amber-200 font-bold uppercase tracking-wider">
+                  <Sparkles size={10} /> Gemini Summarizer
+                </div>
+                <div className="text-[11px] text-slate-300 italic leading-relaxed border-l-2 border-amber-200/55 pl-2">
+                  "This function optimizes memory usage by utilizing standard streams..."
+                </div>
+              </div>
             </motion.div>
 
-            {/* Card 4: Web Workspace */}
+            {/* Bento Card 4: Session Workspaces (Large: 7 cols) */}
             <motion.div 
               variants={itemVariants}
-              className="landing-feature-card"
+              className="bento-card bento-col-7 bento-row-2"
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+              }}
             >
-              <div className="feature-icon-box emerald-icon">
-                <Layers size={20} />
+              <div>
+                <div className="feature-icon-box emerald-icon">
+                  <Layers size={20} />
+                </div>
+                <h3 className="feature-card-title">Session Workspaces</h3>
+                <p className="feature-card-desc">
+                  Capture all open browser tabs under customized workspace profiles. Restore tab groups with a single click.
+                </p>
               </div>
-              <h3 className="feature-card-title">Session Workspaces</h3>
-              <p className="feature-card-desc">
-                Capture all open browser tabs under customized workspace profiles. Restore tab groups with a single click to resume research sessions.
-              </p>
+
+              {/* Stacked tabs illustration */}
+              <div className="mt-6 flex flex-col gap-2">
+                <div className="p-3 bg-white/5 border border-white/5 rounded-xl flex items-center justify-between transition-transform hover:-translate-y-0.5">
+                  <span className="text-[11px] text-white font-medium">React Dev Documentation</span>
+                  <span className="text-[9px] text-emerald-300 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">Active</span>
+                </div>
+                <div className="p-3 bg-white/5 border border-white/5 rounded-xl flex items-center justify-between opacity-75 transition-transform hover:-translate-y-0.5">
+                  <span className="text-[11px] text-slate-300 font-medium">GitHub Repository / Client</span>
+                  <span className="text-[9px] text-slate-400 bg-white/5 px-2 py-0.5 rounded-full">Inactive</span>
+                </div>
+                <div className="p-3 bg-white/5 border border-white/5 rounded-xl flex items-center justify-between opacity-50 transition-transform hover:-translate-y-0.5">
+                  <span className="text-[11px] text-slate-400 font-medium">Gemini API Quickstart</span>
+                  <span className="text-[9px] text-slate-400 bg-white/5 px-2 py-0.5 rounded-full">Inactive</span>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         </div>
@@ -341,42 +441,43 @@ const Landing = ({ onNavigate, isAuthenticated }) => {
             FocusFlow is loaded as an unpacked browser extension in Developer Mode. Complete these steps in under 2 minutes:
           </p>
 
-          <div className="install-grid">
-            <div className="install-step-card">
-              <div className="install-step-num">01</div>
-              <div className="install-step-content">
-                <h4 className="install-step-title">Download the Repository</h4>
-                <p className="install-step-desc">
+          {/* Stepper Timeline UI */}
+          <div className="stepper-timeline">
+            <div className="stepper-step">
+              <div className="stepper-badge">01</div>
+              <div className="stepper-content">
+                <h4 className="stepper-title">Download the Repository</h4>
+                <p className="stepper-desc">
                   Clone the project repository from GitHub. The extension folder contains all required manifests, stylesheets, background workers, and assets.
                 </p>
               </div>
             </div>
 
-            <div className="install-step-card">
-              <div className="install-step-num">02</div>
-              <div className="install-step-content">
-                <h4 className="install-step-title">Open Extension Panel</h4>
-                <p className="install-step-desc">
+            <div className="stepper-step">
+              <div className="stepper-badge">02</div>
+              <div className="stepper-content">
+                <h4 className="stepper-title">Open Extension Panel</h4>
+                <p className="stepper-desc">
                   Open a new tab in Google Chrome, navigate to <code className="gold-code">chrome://extensions/</code>, or click the settings menu -&gt; Extensions.
                 </p>
               </div>
             </div>
 
-            <div className="install-step-card">
-              <div className="install-step-num">03</div>
-              <div className="install-step-content">
-                <h4 className="install-step-title">Enable Developer Mode</h4>
-                <p className="install-step-desc">
+            <div className="stepper-step">
+              <div className="stepper-badge">03</div>
+              <div className="stepper-content">
+                <h4 className="stepper-title">Enable Developer Mode</h4>
+                <p className="stepper-desc">
                   Locate the **"Developer Mode"** toggle switch in the top right corner of the extension settings page and switch it to **ON**.
                 </p>
               </div>
             </div>
 
-            <div className="install-step-card">
-              <div className="install-step-num">04</div>
-              <div className="install-step-content">
-                <h4 className="install-step-title">Load Unpacked Folder</h4>
-                <p className="install-step-desc">
+            <div className="stepper-step">
+              <div className="stepper-badge">04</div>
+              <div className="stepper-content">
+                <h4 className="stepper-title">Load Unpacked Folder</h4>
+                <p className="stepper-desc">
                   Click **"Load unpacked"** in the top left, then select the <code className="gold-code">/extension</code> folder in your cloned project path.
                 </p>
               </div>

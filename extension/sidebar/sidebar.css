@@ -120,9 +120,9 @@ header {
 
 .tab-btn.active {
   color: white;
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.25);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+  background: rgba(197, 168, 128, 0.15);
+  border: 1px solid rgba(197, 168, 128, 0.3);
+  box-shadow: 0 4px 12px rgba(197, 168, 128, 0.08);
 }
 
 /* Tab Panels Scroll Container */
@@ -187,7 +187,7 @@ header {
   color: white;
   align-self: flex-end;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 10px rgba(197, 168, 128, 0.2);
 }
 
 .message.ai-msg {
@@ -540,7 +540,7 @@ header {
 
 .note-item:hover {
   background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: rgba(197, 168, 128, 0.3);
 }
 
 .note-content {
