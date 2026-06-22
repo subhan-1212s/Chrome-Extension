@@ -1,4 +1,4 @@
-const API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
+let API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
 let USER_ID = 'user_demo@example.com';
 
 let currentTabDomain = '';
@@ -6,8 +6,9 @@ let currentTabUrl = '';
 let currentTabTitle = '';
 
 document.addEventListener('DOMContentLoaded', () => {
-  chrome.storage.local.get('user_id', (items) => {
+  chrome.storage.local.get(['user_id', 'api_url'], (items) => {
     if (items.user_id) USER_ID = items.user_id;
+    if (items.api_url) API_URL = items.api_url;
   });
   // 1. Tab Switching Logic
   const tabs = document.querySelectorAll('.tab-btn');
@@ -366,6 +367,13 @@ async function fetchNotes() {
         </div>
       `;
 
+      // Redirect parent page when clicking on note content
+      item.querySelector('.note-content').addEventListener('click', () => {
+        if (note.url) {
+          window.open(note.url, '_blank');
+        }
+      });
+
       item.querySelector('.note-delete').addEventListener('click', async (e) => {
         const noteId = e.currentTarget.getAttribute('data-id');
         if (confirm('Delete this highlight?')) {
@@ -428,11 +436,18 @@ function escapeHtml(text) {
   return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-// Sync user from local storage changes in the sidebar
+// Sync user and api_url from local storage changes in the sidebar
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'local' && changes.user_id) {
-    USER_ID = changes.user_id.newValue || 'user_demo@example.com';
-    fetchTasks();
-    fetchNotes();
+  if (area === 'local') {
+    if (changes.user_id) {
+      USER_ID = changes.user_id.newValue || 'user_demo@example.com';
+      fetchTasks();
+      fetchNotes();
+    }
+    if (changes.api_url) {
+      API_URL = changes.api_url.newValue || 'https://chrome-extension-ts0n.onrender.com/api';
+      fetchTasks();
+      fetchNotes();
+    }
   }
 });

@@ -2,10 +2,11 @@ let activeTabId = null;
 let activeStartTime = null;
 let activeDomain = null;
 
-const API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
+let API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
 let USER_ID = 'user_demo@example.com';
-chrome.storage.local.get('user_id', (items) => {
+chrome.storage.local.get(['user_id', 'api_url'], (items) => {
   if (items.user_id) USER_ID = items.user_id;
+  if (items.api_url) API_URL = items.api_url;
 });
 
 // Pomodoro Timer State
@@ -377,6 +378,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   
   return true; // Keep message channel open for async responses
+});
+
+// Sync user and API url on storage changes
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local') {
+    if (changes.user_id) {
+      USER_ID = changes.user_id.newValue || 'user_demo@example.com';
+      updateBlockingRules();
+    }
+    if (changes.api_url) {
+      API_URL = changes.api_url.newValue || 'https://chrome-extension-ts0n.onrender.com/api';
+      updateBlockingRules();
+    }
+  }
 });
 
 // Initial update rules on startup

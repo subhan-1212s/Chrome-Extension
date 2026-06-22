@@ -1,10 +1,11 @@
-const API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
+let API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
 let USER_ID = 'user_demo@example.com';
 
 document.addEventListener('DOMContentLoaded', async () => {
   let interval;
-  chrome.storage.local.get('user_id', async (items) => {
+  chrome.storage.local.get(['user_id', 'api_url'], async (items) => {
     if (items.user_id) USER_ID = items.user_id;
+    if (items.api_url) API_URL = items.api_url;
 
     // Initial draw
     updateUI();
@@ -232,3 +233,16 @@ function updateQuickBlockUI(domain, blockedSites) {
     btn.classList.remove('unblock');
   }
 }
+
+// Sync user and api_url from local storage changes in the popup
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local') {
+    if (changes.user_id) {
+      USER_ID = changes.user_id.newValue || 'user_demo@example.com';
+    }
+    if (changes.api_url) {
+      API_URL = changes.api_url.newValue || 'https://chrome-extension-ts0n.onrender.com/api';
+    }
+    updateUI();
+  }
+});

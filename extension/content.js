@@ -1,9 +1,21 @@
 let BACKEND_API = 'https://chrome-extension-ts0n.onrender.com/api';
 let CURRENT_USER = 'user_demo@example.com';
 
-chrome.storage.local.get('user_id', (items) => {
+chrome.storage.local.get(['user_id', 'api_url'], (items) => {
   if (items.user_id) CURRENT_USER = items.user_id;
+  if (items.api_url) BACKEND_API = items.api_url;
 });
+
+// Detect dashboard page dynamically to set backend api_url in local storage
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  const localApi = 'http://localhost:5000/api';
+  BACKEND_API = localApi;
+  chrome.storage.local.set({ api_url: localApi });
+} else if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('focusflow')) {
+  const prodApi = 'https://chrome-extension-ts0n.onrender.com/api';
+  BACKEND_API = prodApi;
+  chrome.storage.local.set({ api_url: prodApi });
+}
 
 let sidebarContainer = null;
 let shadowRoot = null;
@@ -231,10 +243,15 @@ function handleIframeMessages(e) {
   }
 }
 
-// Sync user from local storage changes
+// Sync user and api_url from local storage changes
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'local' && changes.user_id) {
-    CURRENT_USER = changes.user_id.newValue || 'user_demo@example.com';
+  if (area === 'local') {
+    if (changes.user_id) {
+      CURRENT_USER = changes.user_id.newValue || 'user_demo@example.com';
+    }
+    if (changes.api_url) {
+      BACKEND_API = changes.api_url.newValue || 'https://chrome-extension-ts0n.onrender.com/api';
+    }
   }
 });
 

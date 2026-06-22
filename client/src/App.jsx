@@ -13,7 +13,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Landing from './Landing';
 
 let API_URL = import.meta.env.VITE_API_URL || 'https://chrome-extension-ts0n.onrender.com/api';
-if (API_URL && !API_URL.endsWith('/api') && !API_URL.endsWith('/api/')) {
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  API_URL = 'http://localhost:5000/api';
+} else if (API_URL && !API_URL.endsWith('/api') && !API_URL.endsWith('/api/')) {
   API_URL = API_URL.endsWith('/') ? `${API_URL}api` : `${API_URL}/api`;
 }
 
@@ -266,6 +268,16 @@ const App = () => {
       setNotes(notes.filter(n => n._id !== noteId));
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleNoteClick = (e, url) => {
+    // Only redirect if they didn't click the delete button or the anchor link
+    if (e.target.closest('.delete-task-btn') || e.target.closest('a')) {
+      return;
+    }
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -1001,7 +1013,7 @@ const App = () => {
                       const term = noteSearch.toLowerCase();
                       return note.content.toLowerCase().includes(term) || note.domain.toLowerCase().includes(term);
                     }).map(note => (
-                      <div key={note._id} className="glass-card note-card">
+                      <div key={note._id} className="glass-card note-card" onClick={(e) => handleNoteClick(e, note.url)}>
                         <div className="note-header-row">
                           <span className="note-domain">{note.domain}</span>
                           <button onClick={() => handleDeleteNote(note._id)} className="delete-task-btn" title="Delete Note">

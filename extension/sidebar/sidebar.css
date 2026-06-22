@@ -550,6 +550,13 @@ header {
   margin-bottom: 8px;
   border-left: 2px solid var(--primary);
   padding-left: 8px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.note-content:hover {
+  color: var(--primary);
+  text-decoration: underline;
 }
 
 .note-meta {
