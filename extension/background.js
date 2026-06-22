@@ -334,6 +334,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
   }
 
+  else if (message.action === 'NOTE_SAVED') {
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach(tab => {
+        if (tab.url && (tab.url.includes('localhost') || tab.url.includes('vercel.app') || tab.url.includes('chrome-extension-ts0n.onrender.com'))) {
+          chrome.tabs.sendMessage(tab.id, { action: 'FOCUSFLOW_NOTE_SAVED' }).catch(() => {
+            // Ignore errors for tabs without content script
+          });
+        }
+      });
+    });
+    sendResponse({ success: true });
+  }
+
   else if (message.action === 'GET_ACTIVE_TABS') {
     chrome.tabs.query({ currentWindow: true }, (tabs) => {
       const filteredTabs = tabs

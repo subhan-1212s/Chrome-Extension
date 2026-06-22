@@ -427,3 +427,12 @@ function escapeHtml(text) {
   };
   return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
+
+// Sync user from local storage changes in the sidebar
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.user_id) {
+    USER_ID = changes.user_id.newValue || 'user_demo@example.com';
+    fetchTasks();
+    fetchNotes();
+  }
+});

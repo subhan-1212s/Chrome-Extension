@@ -150,6 +150,9 @@ async function saveHighlight(text) {
         
         // Let sidebar know if it is open to refresh list
         sidebarIframe.contentWindow.postMessage({ action: 'REFRESH_NOTES' }, '*');
+        
+        // Broadcast to background worker to update any open dashboard tabs instantly
+        chrome.runtime.sendMessage({ action: 'NOTE_SAVED' });
       }
     } catch (err) {
       console.error('FocusFlow clipping sync failed:', err);
@@ -222,7 +225,25 @@ function handleIframeMessages(e) {
       tabs: e.data.tabs
     });
   }
+  
+  else if (e.data && e.data.action === 'FOCUSFLOW_SYNC_USER') {
+    chrome.runtime.sendMessage({ action: 'SYNC_USER', userId: e.data.userId });
+  }
 }
+
+// Sync user from local storage changes
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.user_id) {
+    CURRENT_USER = changes.user_id.newValue || 'user_demo@example.com';
+  }
+});
+
+// Listen for messages from background script to notify dashboard of a saved note
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'FOCUSFLOW_NOTE_SAVED') {
+    window.postMessage({ action: 'FOCUSFLOW_NOTE_SAVED' }, '*');
+  }
+});
 
 // Set global indicator attribute so webpage knows the extension is active
 document.documentElement.setAttribute('data-focusflow-extension', 'true');

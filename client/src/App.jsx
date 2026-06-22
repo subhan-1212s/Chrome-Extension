@@ -99,7 +99,24 @@ const App = () => {
   useEffect(() => {
     if (userId) {
       fetchData();
+      // Sync with Chrome Extension via postMessage to content script
+      window.postMessage({ 
+        action: 'FOCUSFLOW_SYNC_USER', 
+        userId: userId 
+      }, '*');
     }
+  }, [userId]);
+
+  // Live listener to refresh the dashboard/Knowledge Hub when a note is clipped
+  useEffect(() => {
+    const handleNoteSaved = (event) => {
+      if (event.data && event.data.action === 'FOCUSFLOW_NOTE_SAVED') {
+        console.log("Note saved event received, updating data...");
+        fetchData();
+      }
+    };
+    window.addEventListener('message', handleNoteSaved);
+    return () => window.removeEventListener('message', handleNoteSaved);
   }, [userId]);
 
   // Auth actions
@@ -127,13 +144,11 @@ const App = () => {
         setUserId(loggedInEmail);
         navigate('/dashboard');
         
-        // Sync with Chrome Extension if present
-        if (window.chrome && window.chrome.runtime) {
-          window.chrome.runtime.sendMessage({ 
-            action: 'SYNC_USER', 
-            userId: loggedInEmail 
-          });
-        }
+        // Sync with Chrome Extension via postMessage to content script
+        window.postMessage({ 
+          action: 'FOCUSFLOW_SYNC_USER', 
+          userId: loggedInEmail 
+        }, '*');
       }
     } catch (err) {
       const msg = err.response?.data?.error || 'Authentication failed. Please try again.';
@@ -151,12 +166,11 @@ const App = () => {
     setNotes([]);
     setSessions([]);
     navigate('/');
-    if (window.chrome && window.chrome.runtime) {
-      window.chrome.runtime.sendMessage({ 
-        action: 'SYNC_USER', 
-        userId: 'user_demo@example.com' 
-      });
-    }
+    // Sync with Chrome Extension via postMessage to reset user
+    window.postMessage({ 
+      action: 'FOCUSFLOW_SYNC_USER', 
+      userId: 'user_demo@example.com' 
+    }, '*');
   };
 
   const fetchData = async () => {
