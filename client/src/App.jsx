@@ -952,9 +952,9 @@ const App = () => {
   
                     {/* Category Breakdown Pie Chart */}
                     <motion.div 
-                      className="glass-card flex flex-col justify-between"
+                      className="glass-card"
                       whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(16, 103, 217, 0.06)", borderColor: "rgba(16, 103, 217, 0.12)" }}
-                      style={{ height: '360px' }}
+                      style={{ height: '360px', display: 'flex', flexDirection: 'column' }}
                     >
                       <div className="chart-header">
                         <h3>Category Distribution</h3>
@@ -1049,7 +1049,7 @@ const App = () => {
                         )}
                       </div>
   
-                      <div className="flex flex-col gap-2 mt-2 overflow-y-auto custom-scrollbar" style={{ maxHeight: '140px', paddingRight: '2px' }}>
+                      <div className="custom-scrollbar" style={{ flex: '1', overflowY: 'auto', marginTop: '10px', paddingRight: '4px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                         {(() => {
                           const totalPieSecs = pieData.reduce((acc, curr) => acc + curr.value, 0) || 1;
                           return pieData.map((entry, index) => {
