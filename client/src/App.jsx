@@ -1286,7 +1286,7 @@ const App = () => {
                             <option value="low">Low (Standard Checklist)</option>
                           </select>
                         </div>
-                        <div className="flex gap-3 justify-end mt-4">
+                        <div className="modal-actions">
                           <button type="button" onClick={() => setShowTaskModal(false)} className="btn btn-secondary">Cancel</button>
                           <button type="submit" className="btn btn-primary">Add Target</button>
                         </div>
@@ -1350,15 +1350,15 @@ const App = () => {
             {/* 4. WORKSPACE SESSIONS VIEW */}
             {activeTab === 'workspaces' && (
               <div className="workspaces-view">
-                <div className="glass-card flex justify-between items-center">
-                  <div className="flex flex-col gap-1">
+                <div className="glass-card workspace-capturer-card">
+                  <div className="workspace-capturer-info">
                     <h3 className="text-base font-bold">Workspace Tab Session Capturer</h3>
                     <p className="text-xs text-slate-500 font-medium">Instantly snapshot all active tabs in this browser window and restore them later.</p>
                   </div>
-                  <form onSubmit={handleSaveWorkspaceSession} className="flex gap-3">
+                  <form onSubmit={handleSaveWorkspaceSession} className="workspace-capturer-form">
                     <input 
                       type="text" 
-                      className="input-field max-w-[200px]" 
+                      className="input-field" 
                       placeholder="Workspace name..." 
                       value={saveWorkspaceName}
                       onChange={(e) => setSaveWorkspaceName(e.target.value)}
