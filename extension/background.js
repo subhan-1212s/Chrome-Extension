@@ -145,6 +145,7 @@ async function syncActivity(activity) {
 
 // Declarative Net Request Dynamic Blocking Rules
 async function updateBlockingRules() {
+  await loadPomoState(); // Ensure the latest Pomodoro state is loaded first
   let blockedSites = [];
   let focusMode = false;
   let fetchedSuccessfully = false;
@@ -457,36 +458,48 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 // Runtime Message Handlers
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'GET_POMODORO_STATE') {
-    if (pomoIsRunning && pomoTargetEndTime) {
-      pomoTimeLeft = Math.max(0, Math.round((pomoTargetEndTime - Date.now()) / 1000));
-      if (pomoTimeLeft === 0) {
-        handlePomodoroCompletion();
+    loadPomoState().then(() => {
+      if (pomoIsRunning && pomoTargetEndTime) {
+        pomoTimeLeft = Math.max(0, Math.round((pomoTargetEndTime - Date.now()) / 1000));
+        if (pomoTimeLeft === 0) {
+          handlePomodoroCompletion();
+        }
       }
-    }
-    const minutes = Math.floor(pomoTimeLeft / 60);
-    const seconds = pomoTimeLeft % 60;
-    sendResponse({
-      minutes,
-      seconds,
-      isRunning: pomoIsRunning,
-      phase: pomoPhase,
-      sessionCount: pomoSessionCount
+      const minutes = Math.floor(pomoTimeLeft / 60);
+      const seconds = pomoTimeLeft % 60;
+      sendResponse({
+        minutes,
+        seconds,
+        isRunning: pomoIsRunning,
+        phase: pomoPhase,
+        sessionCount: pomoSessionCount
+      });
     });
+    return true; // Keep message channel open for async response
   }
   
   else if (message.action === 'START_POMODORO') {
-    startPomodoro();
-    sendResponse({ success: true });
+    loadPomoState().then(() => {
+      startPomodoro();
+      sendResponse({ success: true });
+    });
+    return true; // Keep message channel open for async response
   }
   
   else if (message.action === 'PAUSE_POMODORO') {
-    pausePomodoro();
-    sendResponse({ success: true });
+    loadPomoState().then(() => {
+      pausePomodoro();
+      sendResponse({ success: true });
+    });
+    return true; // Keep message channel open for async response
   }
   
   else if (message.action === 'RESET_POMODORO') {
-    resetPomodoro();
-    sendResponse({ success: true });
+    loadPomoState().then(() => {
+      resetPomodoro();
+      sendResponse({ success: true });
+    });
+    return true; // Keep message channel open for async response
   }
   
   else if (message.action === 'REFRESH_BLOCKING_RULES') {
