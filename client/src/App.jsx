@@ -777,7 +777,7 @@ const App = () => {
                       <h3>Time Distribution (Minutes)</h3>
                       <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">Live Activity Domain Feed</span>
                     </div>
-                    <div className="h-[260px] w-full mt-4">
+                    <div style={{ height: '260px', width: '100%', marginTop: '16px' }}>
                       {stats.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                           <AreaChart data={stats.map(s => ({ name: s._id, Minutes: Math.round(s.totalDuration / 60) }))}>
@@ -802,17 +802,17 @@ const App = () => {
                       )}
                     </div>
                   </motion.div>
-
+ 
                   {/* Weekly Focus Hours Bar Chart */}
                   <motion.div 
                     className="glass-card"
                     whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(16, 103, 217, 0.06)", borderColor: "rgba(16, 103, 217, 0.12)" }}
                   >
-                    <div className="chart-header">
-                      <h3>Weekly Activity Profile</h3>
-                      <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">Rolling 7-Day Performance</span>
-                    </div>
-                    <div className="h-[260px] w-full mt-4 bar-chart-glow">
+                     <div className="chart-header">
+                       <h3>Weekly Activity Profile</h3>
+                       <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">Rolling 7-Day Performance</span>
+                     </div>
+                    <div className="bar-chart-glow" style={{ height: '260px', width: '100%', marginTop: '16px' }}>
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={weeklyData}>
                           <defs>
@@ -904,12 +904,12 @@ const App = () => {
                   <motion.div 
                     className="glass-card flex flex-col justify-between"
                     whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(16, 103, 217, 0.06)", borderColor: "rgba(16, 103, 217, 0.12)" }}
-                    style={{ minHeight: '250px' }}
+                    style={{ minHeight: '345px' }}
                   >
                     <div className="chart-header">
                       <h3>Category Distribution</h3>
                     </div>
-                    <div className="h-[130px] w-full relative flex items-center justify-center">
+                    <div style={{ height: '130px', width: '100%', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {pieData.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                           <PieChart>
@@ -936,16 +936,32 @@ const App = () => {
                         <div className="text-slate-400 italic text-xs">No chart statistics logged.</div>
                       )}
                     </div>
-                    <div className="flex flex-col gap-1 mt-1 overflow-y-auto max-h-[70px]">
-                      {pieData.map((entry, index) => (
-                        <div key={index} className="flex justify-between items-center text-[10px]">
-                          <div className="flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
-                            <span className="text-slate-600 font-semibold truncate max-w-[100px]">{entry.name}</span>
+                    <div className="flex flex-col gap-2 mt-2 overflow-y-auto" style={{ maxHeight: '140px', paddingRight: '2px' }}>
+                      {(() => {
+                        const totalPieMins = pieData.reduce((acc, curr) => acc + curr.value, 0) || 1;
+                        return pieData.map((entry, index) => (
+                          <div 
+                            key={index} 
+                            className="flex flex-col gap-1 p-2 transition hover:bg-black/5" 
+                            style={{ 
+                              background: 'rgba(0,0,0,0.01)', 
+                              border: '1px solid rgba(0,0,0,0.03)',
+                              borderRadius: '12px' 
+                            }}
+                          >
+                            <div className="flex justify-between items-center text-[10px]">
+                              <div className="flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+                                <span className="font-semibold text-slate-700 truncate" style={{ maxWidth: '140px' }} title={entry.name}>{entry.name}</span>
+                              </div>
+                              <span className="font-bold px-1.5 py-0.5 rounded-md text-[9px]" style={{ color: COLORS[index % COLORS.length], background: `${COLORS[index % COLORS.length]}12` }}>{entry.value}m</span>
+                            </div>
+                            <div className="w-full bg-slate-100 rounded-full" style={{ height: '4px', overflow: 'hidden' }}>
+                              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${(entry.value / totalPieMins) * 100}%`, backgroundColor: COLORS[index % COLORS.length] }}></div>
+                            </div>
                           </div>
-                          <span className="font-bold text-slate-500">{entry.value}m</span>
-                        </div>
-                      ))}
+                        ));
+                      })()}
                     </div>
                   </motion.div>
 
