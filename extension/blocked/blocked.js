@@ -53,8 +53,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Set up breathing guide text loop
   runBreathingGuide();
   
-  // Sync Pomodoro Timer
+  // Sync Pomodoro Timer — rapid initial sync, then 1s polling
   syncTimer();
+  // Rapid-fire initial sync to catch service worker wake-up
+  let rapidSyncCount = 0;
+  const rapidSync = setInterval(() => {
+    syncTimer();
+    rapidSyncCount++;
+    if (rapidSyncCount >= 10) {
+      clearInterval(rapidSync);
+    }
+  }, 300);
+  // Steady 1-second ticking
   setInterval(syncTimer, 1000);
 
   // Button: Go Back to a safe workspace
@@ -181,8 +191,8 @@ function syncTimer() {
         label.innerText = 'REST & RECHARGE CYCLE';
         label.style.color = '#10b981'; // Emerald break
       } else {
-        label.innerText = 'FOCUS SESSION TIMEOUT';
-        label.style.color = '#6366f1'; // Indigo focus
+        label.innerText = 'FOCUS SESSION ACTIVE';
+        label.style.color = '#1067d9'; // Primary blue focus
       }
     });
   } catch (e) {

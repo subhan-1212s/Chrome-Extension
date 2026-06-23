@@ -4,6 +4,7 @@ let activeDomain = null;
 
 let API_URL = 'https://chrome-extension-ts0n.onrender.com/api';
 let USER_ID = 'user_demo@example.com';
+let currentFocusMode = false;
 // Pomodoro Timer State
 let pomoTimeLeft = 25 * 60; // 25 minutes default
 let pomoIsRunning = false;
@@ -55,10 +56,7 @@ chrome.storage.local.get(['user_id', 'api_url'], (items) => {
   if (items.user_id) USER_ID = items.user_id;
   if (items.api_url) API_URL = items.api_url;
   
-  // Update rules immediately after retrieving the stored user and API configurations
-  updateBlockingRules();
-  
-  // Load Pomodoro state
+  // Load Pomodoro state FIRST so updateBlockingRules sees correct pomoIsRunning
   loadPomoState().then(() => {
     // If it was running when service worker shut down, restore the interval and check if it completed
     if (pomoIsRunning && pomoTargetEndTime) {
@@ -70,6 +68,9 @@ chrome.storage.local.get(['user_id', 'api_url'], (items) => {
         resumeTickingInterval();
       }
     }
+    
+    // Now update blocking rules AFTER pomo state is loaded
+    updateBlockingRules();
   });
 });
 
@@ -178,6 +179,8 @@ async function updateBlockingRules() {
     });
   }
 
+  currentFocusMode = focusMode;
+
   try {
     const oldRules = await chrome.declarativeNetRequest.getDynamicRules();
     const oldRuleIds = oldRules.map(r => r.id);
@@ -205,6 +208,11 @@ async function updateBlockingRules() {
         addRules: rules
       });
       console.log(`Focus Mode Active: Blocking rules updated with redirection (${fetchedSuccessfully ? 'from server' : 'from cache'})`);
+      
+      // Link to Pomodoro: Auto-start Pomodoro timer if focus mode is active but timer is idle
+      if (!pomoIsRunning) {
+        startPomodoro();
+      }
     } else {
       // Clear rules when Focus Mode is OFF
       await chrome.declarativeNetRequest.updateDynamicRules({
@@ -212,6 +220,11 @@ async function updateBlockingRules() {
         addRules: []
       });
       console.log(`Focus Mode Inactive: Blocking rules cleared (${fetchedSuccessfully ? 'from server' : 'from cache'})`);
+      
+      // Link to Pomodoro: Auto-pause Pomodoro work timer if focus mode is disabled
+      if (pomoIsRunning && pomoPhase === 'work') {
+        pausePomodoro();
+      }
     }
   } catch (e) {
     console.error('Failed to apply declarative blocking rules:', e);
@@ -292,6 +305,13 @@ function startPomodoro() {
   chrome.alarms.create('pomodoroComplete', { when: pomoTargetEndTime });
   
   resumeTickingInterval();
+
+  // Sync Focus Mode status to API
+  if (!currentFocusMode && pomoPhase === 'work') {
+    toggleFocusModeAPI(true);
+  } else if (currentFocusMode && pomoPhase === 'break') {
+    toggleFocusModeAPI(false);
+  }
 }
 
 function pausePomodoro() {
@@ -306,6 +326,11 @@ function pausePomodoro() {
   }
   chrome.alarms.clear('pomodoroComplete');
   savePomoState();
+
+  // Turn off focus mode
+  if (currentFocusMode) {
+    toggleFocusModeAPI(false);
+  }
 }
 
 function resetPomodoro() {
@@ -315,6 +340,11 @@ function resetPomodoro() {
   pomoTargetEndTime = null;
   chrome.alarms.clear('pomodoroComplete');
   savePomoState();
+
+  // Turn off focus mode
+  if (currentFocusMode) {
+    toggleFocusModeAPI(false);
+  }
 }
 
 async function handlePomodoroCompletion() {

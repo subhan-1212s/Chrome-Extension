@@ -143,6 +143,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3. Pomodoro Timer State Sync
   syncPomodoro();
+  // Rapid initial sync to catch service worker wake-up quickly
+  let rapidCount = 0;
+  const rapidPomo = setInterval(() => {
+    syncPomodoro();
+    rapidCount++;
+    if (rapidCount >= 10) clearInterval(rapidPomo);
+  }, 300);
   pomoInterval = setInterval(syncPomodoro, 1000);
 
   // Pomodoro controls in sidebar

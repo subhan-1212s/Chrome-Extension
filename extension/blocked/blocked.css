@@ -65,14 +65,14 @@ body {
 }
 
 .container {
-  max-width: 500px;
+  max-width: 480px;
   width: 90%;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(35px);
   -webkit-backdrop-filter: blur(35px);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 40px;
-  padding: 45px 40px;
+  border-radius: 32px;
+  padding: 32px 30px;
   box-shadow: 0 30px 100px rgba(16, 103, 217, 0.06),
               inset 0 0 0 1px rgba(255, 255, 255, 0.4),
               0 0 40px rgba(212, 175, 55, 0.02);
@@ -93,7 +93,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 35px;
+  margin-bottom: 22px;
 }
 
 .logo {
@@ -139,16 +139,16 @@ header {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 35px 0;
+  margin: 18px 0;
 }
 
 .breathing-container {
-  width: 160px;
-  height: 160px;
+  width: 140px;
+  height: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 25px;
+  margin-bottom: 18px;
   position: relative;
 }
 
@@ -160,8 +160,8 @@ header {
 }
 
 .glow-ring.ring-1 {
-  width: 160px;
-  height: 160px;
+  width: 140px;
+  height: 140px;
   border-color: rgba(16, 103, 217, 0.12);
   animation: spinClockwise 20s infinite linear;
 }
@@ -228,7 +228,7 @@ header {
 
 /* Message Card */
 .message-card {
-  margin-bottom: 35px;
+  margin-bottom: 20px;
 }
 
 .message-card h1 {
@@ -260,11 +260,11 @@ header {
 .timer-widget {
   background: linear-gradient(135deg, rgba(16, 103, 217, 0.03) 0%, rgba(16, 185, 129, 0.03) 100%);
   border: 1px solid rgba(16, 103, 217, 0.08);
-  padding: 18px 28px;
-  border-radius: 28px;
-  margin-bottom: 35px;
+  padding: 14px 24px;
+  border-radius: 24px;
+  margin-bottom: 22px;
   display: inline-block;
-  min-width: 250px;
+  min-width: 240px;
   box-shadow: inset 0 2px 12px rgba(16, 103, 217, 0.02);
 }
 
@@ -326,8 +326,8 @@ header {
 /* Actions */
 .actions {
   display: flex;
-  gap: 14px;
-  margin-bottom: 25px;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
 .btn {
