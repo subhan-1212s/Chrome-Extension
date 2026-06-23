@@ -52,20 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Set up breathing guide text loop
   runBreathingGuide();
-  
-  // Sync Pomodoro Timer — rapid initial sync, then 1s polling
-  syncTimer();
-  // Rapid-fire initial sync to catch service worker wake-up
-  let rapidSyncCount = 0;
-  const rapidSync = setInterval(() => {
-    syncTimer();
-    rapidSyncCount++;
-    if (rapidSyncCount >= 10) {
-      clearInterval(rapidSync);
-    }
-  }, 300);
-  // Steady 1-second ticking
-  setInterval(syncTimer, 1000);
 
   // Button: Go Back to a safe workspace
   document.getElementById('go-back-btn').addEventListener('click', () => {
@@ -162,42 +148,6 @@ function runBreathingGuide() {
   
   breatheLoop();
   setInterval(breatheLoop, 8000);
-}
-
-function syncTimer() {
-  if (!isExtensionValid()) return;
-  try {
-    chrome.runtime.sendMessage({ action: 'GET_POMODORO_STATE' }, (response) => {
-      if (chrome.runtime.lastError || !response) return;
-
-      const { minutes, seconds, phase } = response;
-      const formattedMinutes = String(minutes).padStart(2, '0');
-      const formattedSeconds = String(seconds).padStart(2, '0');
-      
-      document.getElementById('timer-display').innerHTML = `
-        <div class="time-block">
-          <span class="time-number">${formattedMinutes}</span>
-          <span class="time-unit">min</span>
-        </div>
-        <div class="time-colon">:</div>
-        <div class="time-block">
-          <span class="time-number">${formattedSeconds}</span>
-          <span class="time-unit">sec</span>
-        </div>
-      `;
-      
-      const label = document.getElementById('timer-phase');
-      if (phase === 'break') {
-        label.innerText = 'REST & RECHARGE CYCLE';
-        label.style.color = '#10b981'; // Emerald break
-      } else {
-        label.innerText = 'FOCUS SESSION ACTIVE';
-        label.style.color = '#1067d9'; // Primary blue focus
-      }
-    });
-  } catch (e) {
-    // Extension context invalidated — stop polling
-  }
 }
 
 // Sync user, api_url, and dashboard_url from storage changes while blocked page is open
