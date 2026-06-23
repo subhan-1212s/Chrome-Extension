@@ -61,7 +61,21 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Notify background worker to refresh rules immediately
         chrome.runtime.sendMessage({ action: 'REFRESH_BLOCKING_RULES' }, () => {
-          window.location.href = DASHBOARD_URL;
+          // Retrieve originally blocked URL for this tab and redirect back to it
+          chrome.tabs.getCurrent((tab) => {
+            if (tab) {
+              chrome.storage.local.get(`lastUrl_${tab.id}`, (items) => {
+                const originalUrl = items[`lastUrl_${tab.id}`];
+                if (originalUrl) {
+                  window.location.href = originalUrl;
+                } else {
+                  window.location.href = DASHBOARD_URL;
+                }
+              });
+            } else {
+              window.location.href = DASHBOARD_URL;
+            }
+          });
         });
       } catch (e) {
         console.error('Failed to disable Focus Mode:', e);

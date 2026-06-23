@@ -291,29 +291,29 @@ const Landing = ({ onNavigate, isAuthenticated }) => {
               </div>
 
               {/* Inline SVG Chart Visualization */}
-              <div className="mt-8 p-4 bg-black/40 border border-white/5 rounded-2xl h-[160px] relative overflow-hidden flex flex-col justify-between">
+              <div className="mt-8 p-4 bg-slate-100/50 border border-black/5 rounded-2xl h-[160px] relative overflow-hidden flex flex-col justify-between">
                 <div className="flex justify-between items-center text-[10px] text-slate-500 font-semibold tracking-wider">
                   <span>LIVE PRODUCTIVITY FEED</span>
-                  <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ACTIVE</span>
+                  <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> ACTIVE</span>
                 </div>
                 <div className="flex-1 flex items-end gap-3 mt-4 h-[70px]">
                   <div className="flex-1 flex flex-col gap-1.5">
-                    <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
-                      <div className="bg-gradient-to-r from-amber-200 to-amber-500 h-full rounded-full w-[80%] transition-all duration-1000" style={{ width: '80%', height: '100%' }}></div>
+                    <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full w-[80%] transition-all duration-1000" style={{ background: 'linear-gradient(to right, #1067d9, #00d2ff)', width: '80%', height: '100%' }}></div>
                     </div>
-                    <span className="text-[10px] text-slate-400 font-bold">github.com</span>
+                    <span className="text-[10px] text-slate-500 font-bold">github.com</span>
                   </div>
                   <div className="flex-1 flex flex-col gap-1.5">
-                    <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
-                      <div className="bg-gradient-to-r from-amber-200 to-amber-500 h-full rounded-full w-[45%] transition-all duration-1000" style={{ width: '45%', height: '100%' }}></div>
+                    <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full w-[45%] transition-all duration-1000" style={{ background: 'linear-gradient(to right, #1067d9, #00d2ff)', width: '45%', height: '100%' }}></div>
                     </div>
-                    <span className="text-[10px] text-slate-400 font-bold">stackoverflow.com</span>
+                    <span className="text-[10px] text-slate-500 font-bold">stackoverflow.com</span>
                   </div>
                   <div className="flex-1 flex flex-col gap-1.5">
-                    <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
-                      <div className="bg-rose-400/80 h-full rounded-full w-[20%] transition-all duration-1000" style={{ width: '20%', height: '100%' }}></div>
+                    <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                      <div className="bg-rose-500/80 h-full rounded-full w-[20%] transition-all duration-1000" style={{ width: '20%', height: '100%' }}></div>
                     </div>
-                    <span className="text-[10px] text-rose-400/80 font-bold">youtube.com (Blocked)</span>
+                    <span className="text-[10px] text-rose-500/80 font-bold">youtube.com (Blocked)</span>
                   </div>
                 </div>
               </div>
@@ -374,11 +374,11 @@ const Landing = ({ onNavigate, isAuthenticated }) => {
               </div>
 
               {/* Chat bubble visual indicator */}
-              <div className="mt-6 p-3 rounded-2xl bg-white/5 border border-white/5 flex flex-col gap-2">
-                <div className="flex items-center gap-1.5 text-[9px] text-amber-200 font-bold uppercase tracking-wider">
+              <div className="mt-6 p-3 rounded-2xl bg-slate-100/50 border border-black/5 flex flex-col gap-2">
+                <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider" style={{ color: 'var(--primary)' }}>
                   <Sparkles size={10} /> Gemini Summarizer
                 </div>
-                <div className="text-[11px] text-slate-300 italic leading-relaxed border-l-2 border-amber-200/55 pl-2">
+                <div className="text-[11px] text-slate-600 italic leading-relaxed border-l-2 pl-2" style={{ borderColor: 'var(--primary-glow)' }}>
                   "This function optimizes memory usage by utilizing standard streams..."
                 </div>
               </div>
@@ -408,17 +408,17 @@ const Landing = ({ onNavigate, isAuthenticated }) => {
 
               {/* Stacked tabs illustration */}
               <div className="mt-6 flex flex-col gap-2">
-                <div className="p-3 bg-white/5 border border-white/5 rounded-xl flex items-center justify-between transition-transform hover:-translate-y-0.5">
-                  <span className="text-[11px] text-white font-medium">React Dev Documentation</span>
-                  <span className="text-[9px] text-emerald-300 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">Active</span>
+                <div className="p-3 bg-slate-100/50 border border-black/5 rounded-xl flex items-center justify-between transition-transform hover:-translate-y-0.5">
+                  <span className="text-[11px] text-slate-700 font-medium">React Dev Documentation</span>
+                  <span className="text-[9px] text-emerald-700 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">Active</span>
                 </div>
-                <div className="p-3 bg-white/5 border border-white/5 rounded-xl flex items-center justify-between opacity-75 transition-transform hover:-translate-y-0.5">
-                  <span className="text-[11px] text-slate-300 font-medium">GitHub Repository / Client</span>
-                  <span className="text-[9px] text-slate-400 bg-white/5 px-2 py-0.5 rounded-full">Inactive</span>
+                <div className="p-3 bg-slate-100/50 border border-black/5 rounded-xl flex items-center justify-between opacity-75 transition-transform hover:-translate-y-0.5">
+                  <span className="text-[11px] text-slate-600 font-medium">GitHub Repository / Client</span>
+                  <span className="text-[9px] text-slate-500 bg-slate-200/50 px-2 py-0.5 rounded-full">Inactive</span>
                 </div>
-                <div className="p-3 bg-white/5 border border-white/5 rounded-xl flex items-center justify-between opacity-50 transition-transform hover:-translate-y-0.5">
-                  <span className="text-[11px] text-slate-400 font-medium">Gemini API Quickstart</span>
-                  <span className="text-[9px] text-slate-400 bg-white/5 px-2 py-0.5 rounded-full">Inactive</span>
+                <div className="p-3 bg-slate-100/50 border border-black/5 rounded-xl flex items-center justify-between opacity-50 transition-transform hover:-translate-y-0.5">
+                  <span className="text-[11px] text-slate-500 font-medium">Gemini API Quickstart</span>
+                  <span className="text-[9px] text-slate-500 bg-slate-200/50 px-2 py-0.5 rounded-full">Inactive</span>
                 </div>
               </div>
             </motion.div>

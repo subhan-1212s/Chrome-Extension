@@ -1,17 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary: #C5A880; /* Gold */
-  --primary-glow: rgba(197, 168, 128, 0.35);
-  --primary-hover: #b2956c;
-  --bg-dark: #050506;
-  --card-bg: rgba(15, 15, 17, 0.75);
-  --text-main: #f5f5f7;
-  --text-muted: #8e8e93;
-  --border: rgba(197, 168, 128, 0.1);
-  --emerald: #a3c4bc;
-  --rose: #d68c8c;
-  --orange: #e5ba73;
+  --primary: #1067d9; /* Royal Blue */
+  --primary-glow: rgba(16, 103, 217, 0.15);
+  --primary-hover: #0053b3;
+  --bg-dark: #f5f5f7; /* Apple Silver/Grey */
+  --card-bg: #ffffff; /* Pure White */
+  --text-main: #1d1d1f; /* Charcoal Black */
+  --text-muted: #86868b; /* Grey Text */
+  --border: rgba(0, 0, 0, 0.08); /* Clean light border */
+  --emerald: #2e7d32; /* Success Green */
+  --rose: #d32f2f; /* Error Red */
+  --orange: #ed6c02; /* Amber Orange */
 }
 
 * {
@@ -28,7 +28,7 @@ body {
   overflow: hidden;
   border-left: 1px solid var(--border);
   background: radial-gradient(circle at top left, var(--primary-glow), transparent 60%),
-              linear-gradient(180deg, #050506 0%, #0d0d0f 100%);
+              linear-gradient(180deg, #f5f5f7 0%, #ffffff 100%);
 }
 
 .sidebar-wrapper {
@@ -89,7 +89,7 @@ header {
 /* Tabs Navigation Bar */
 .tabs-nav {
   display: flex;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(0, 0, 0, 0.02);
   border-bottom: 1px solid var(--border);
   padding: 4px;
   gap: 4px;
@@ -115,14 +115,14 @@ header {
 
 .tab-btn:hover {
   color: var(--text-main);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .tab-btn.active {
-  color: white;
-  background: rgba(197, 168, 128, 0.15);
-  border: 1px solid rgba(197, 168, 128, 0.3);
-  box-shadow: 0 4px 12px rgba(197, 168, 128, 0.08);
+  color: var(--primary);
+  background: rgba(16, 103, 217, 0.08);
+  border: 1px solid rgba(16, 103, 217, 0.15);
+  box-shadow: 0 4px 12px rgba(16, 103, 217, 0.05);
 }
 
 /* Tab Panels Scroll Container */
@@ -174,10 +174,11 @@ header {
   word-wrap: break-word;
 }
 
+/* message formatting */
 .message.system-msg {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.02);
   border: 1px solid var(--border);
-  color: #f1f5f9;
+  color: var(--text-main);
   align-self: flex-start;
   border-top-left-radius: 4px;
 }
@@ -187,15 +188,16 @@ header {
   color: white;
   align-self: flex-end;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 4px 10px rgba(197, 168, 128, 0.2);
+  box-shadow: 0 4px 10px rgba(16, 103, 217, 0.15);
 }
 
 .message.ai-msg {
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border);
+  color: var(--text-main);
   align-self: flex-start;
   border-top-left-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
 .message p {
@@ -205,14 +207,15 @@ header {
   margin-bottom: 0;
 }
 .message code {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.06);
+  color: #e01b5d;
   padding: 2px 5px;
   border-radius: 4px;
   font-family: monospace;
   font-size: 0.8rem;
 }
 .message pre {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.04);
   padding: 8px;
   border-radius: 8px;
   overflow-x: auto;
@@ -226,8 +229,8 @@ header {
 .chat-input-area {
   display: flex;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 12px;
   padding: 4px;
 }
@@ -236,7 +239,7 @@ header {
   flex: 1;
   background: transparent;
   border: none;
-  color: white;
+  color: var(--text-main);
   font-family: inherit;
   font-size: 0.85rem;
   padding: 10px;
@@ -269,7 +272,7 @@ header {
   padding: 18px;
   border-radius: 16px;
   margin-bottom: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
   text-align: center;
 }
 
@@ -306,13 +309,13 @@ header {
 }
 
 .summary-display {
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(255, 255, 255, 0.8);
   border: 1px solid var(--border);
   padding: 16px;
   border-radius: 16px;
   font-size: 0.82rem;
   line-height: 1.5;
-  color: #cbd5e1;
+  color: var(--text-main);
 }
 
 .summary-display h3 {
@@ -320,7 +323,7 @@ header {
   margin-bottom: 8px;
   font-size: 0.88rem;
   color: var(--primary);
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
   padding-bottom: 4px;
 }
 .summary-display h3:first-of-type {
@@ -349,7 +352,7 @@ header {
 .spinner {
   width: 24px;
   height: 24px;
-  border: 2px solid rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(0, 0, 0, 0.05);
   border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 1s infinite linear;
@@ -373,10 +376,10 @@ header {
 
 .quick-add-task input {
   flex: 1;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 10px;
-  color: white;
+  color: var(--text-main);
   font-family: inherit;
   font-size: 0.8rem;
   padding: 8px 12px;
@@ -388,7 +391,7 @@ header {
 }
 
 .quick-add-task button {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.02);
   border: 1px solid var(--border);
   color: var(--text-main);
   width: 34px;
@@ -420,14 +423,15 @@ header {
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(255, 255, 255, 0.8);
   border: 1px solid var(--border);
   border-radius: 10px;
   transition: all 0.2s;
 }
 
 .task-row:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
 }
 
 .task-checkbox {
@@ -530,7 +534,7 @@ header {
 }
 
 .note-item {
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(255, 255, 255, 0.8);
   border: 1px solid var(--border);
   padding: 12px 14px;
   border-radius: 12px;
@@ -539,14 +543,15 @@ header {
 }
 
 .note-item:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(197, 168, 128, 0.3);
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(16, 103, 217, 0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
 }
 
 .note-content {
   font-size: 0.78rem;
   line-height: 1.45;
-  color: #e2e8f0;
+  color: var(--text-main);
   margin-bottom: 8px;
   border-left: 2px solid var(--primary);
   padding-left: 8px;
@@ -608,7 +613,7 @@ header {
   padding: 24px;
   border-radius: 24px;
   margin-bottom: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -628,7 +633,7 @@ header {
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
   margin-bottom: 6px;
-  background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
+  background: linear-gradient(135deg, var(--text-main) 30%, var(--text-muted) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -669,17 +674,17 @@ header {
 }
 
 .pomo-btn.sub {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.02);
   color: var(--text-main);
   border: 1px solid var(--border);
 }
 
 .pomo-btn.sub:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .pomo-tips {
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(255, 255, 255, 0.65);
   border: 1px solid var(--border);
   padding: 14px 16px;
   border-radius: 12px;

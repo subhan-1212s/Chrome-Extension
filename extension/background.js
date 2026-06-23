@@ -288,13 +288,24 @@ async function toggleFocusModeAPI(enable) {
   }
 }
 
-// Listen to redirect hit to increment blocked attempts
+// Listen to tab updates to track last attempted URL and increment blocked attempts
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url && tab.url.includes('/blocked/blocked.html')) {
-    chrome.storage.local.get({ blockedAttempts: 0 }, (items) => {
-      chrome.storage.local.set({ blockedAttempts: items.blockedAttempts + 1 });
-    });
+  if (tab.url) {
+    if (tab.url.includes('/blocked/blocked.html')) {
+      if (changeInfo.status === 'complete') {
+        chrome.storage.local.get({ blockedAttempts: 0 }, (items) => {
+          chrome.storage.local.set({ blockedAttempts: items.blockedAttempts + 1 });
+        });
+      }
+    } else if (tab.url.startsWith('http')) {
+      chrome.storage.local.set({ [`lastUrl_${tabId}`]: tab.url });
+    }
   }
+});
+
+// Clean up stored tab URL history when tab is removed
+chrome.tabs.onRemoved.addListener((tabId) => {
+  chrome.storage.local.remove(`lastUrl_${tabId}`);
 });
 
 // Runtime Message Handlers

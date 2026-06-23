@@ -1,18 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary: #C5A880; /* Gold */
-  --primary-glow: rgba(197, 168, 128, 0.35);
-  --primary-hover: #b2956c;
-  --bg-dark: #050506;
-  --card-bg: rgba(15, 15, 17, 0.75);
-  --text-main: #f5f5f7;
-  --text-muted: #8e8e93;
-  --emerald: #a3c4bc;
-  --emerald-glow: rgba(163, 196, 188, 0.25);
-  --rose: #d68c8c;
-  --rose-glow: rgba(214, 140, 140, 0.25);
-  --border: rgba(197, 168, 128, 0.1);
+  --primary: #1067d9; /* Royal Blue */
+  --primary-glow: rgba(16, 103, 217, 0.15);
+  --primary-hover: #0053b3;
+  --bg-dark: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --emerald: #2e7d32;
+  --emerald-glow: rgba(46, 125, 50, 0.15);
+  --rose: #d32f2f;
+  --rose-glow: rgba(211, 47, 47, 0.15);
+  --border: rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -33,7 +33,7 @@ body {
   padding: 20px;
   background: radial-gradient(circle at top right, var(--primary-glow), transparent 60%),
               radial-gradient(circle at bottom left, var(--emerald-glow), transparent 50%),
-              linear-gradient(180deg, #050506 0%, #0d0d0f 100%);
+              linear-gradient(180deg, #f5f5f7 0%, #ffffff 100%);
   border-radius: 0;
 }
 
@@ -87,9 +87,9 @@ h1 span {
 
 .status-badge {
   font-size: 0.72rem;
-  background: rgba(16, 185, 129, 0.12);
+  background: rgba(46, 125, 50, 0.08);
   color: var(--emerald);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(46, 125, 50, 0.15);
   padding: 4px 10px;
   border-radius: 20px;
   font-weight: 600;
@@ -104,7 +104,7 @@ h1 span {
   padding: 16px;
   border-radius: 20px;
   margin-bottom: 14px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
   text-align: center;
 }
 
@@ -135,7 +135,7 @@ h1 span {
   letter-spacing: -0.03em;
   margin: 6px 0;
   font-variant-numeric: tabular-nums;
-  background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
+  background: linear-gradient(135deg, var(--text-main) 30%, var(--text-muted) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -174,7 +174,7 @@ h1 span {
   height: 32px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.02);
   color: var(--text-muted);
   display: flex;
   align-items: center;
@@ -184,8 +184,8 @@ h1 span {
 }
 
 .btn-icon-sub:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-main);
   transform: rotate(30deg);
 }
 
@@ -201,7 +201,7 @@ h1 span {
   padding: 16px;
   border-radius: 20px;
   margin-bottom: 14px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
 
 .stat-row {
@@ -235,7 +235,6 @@ h1 span {
 
 .text-rose {
   color: var(--rose);
-  text-shadow: 0 0 10px var(--rose-glow);
 }
 
 .progress-bar-container {
@@ -246,15 +245,15 @@ h1 span {
 
 .progress-bar {
   height: 6px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.04);
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.02);
 }
 
 .progress {
   height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--emerald));
+  background: linear-gradient(90deg, var(--primary), #00d2ff);
   box-shadow: 0 0 8px var(--primary-glow);
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -271,7 +270,7 @@ h1 span {
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.02);
   border: 1px solid var(--border);
   border-radius: 14px;
   margin-bottom: 18px;
@@ -296,9 +295,9 @@ h1 span {
   font-size: 0.7rem;
   font-family: inherit;
   font-weight: 600;
-  background: rgba(244, 63, 94, 0.12);
+  background: rgba(211, 47, 47, 0.08);
   color: var(--rose);
-  border: 1px solid rgba(244, 63, 94, 0.2);
+  border: 1px solid rgba(211, 47, 47, 0.15);
   padding: 5px 12px;
   border-radius: 10px;
   cursor: pointer;
@@ -312,9 +311,9 @@ h1 span {
 }
 
 .block-badge.unblock {
-  background: rgba(16, 185, 129, 0.12);
+  background: rgba(46, 125, 50, 0.08);
   color: var(--emerald);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(46, 125, 50, 0.15);
 }
 
 .block-badge.unblock:hover {
@@ -355,13 +354,13 @@ h1 span {
 }
 
 .btn.secondary {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.02);
   color: var(--text-main);
   border: 1px solid var(--border);
 }
 
 .btn.secondary:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.05);
   transform: translateY(-1px);
 }
 

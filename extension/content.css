@@ -6,12 +6,12 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(10, 10, 12, 0.82);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(197, 168, 128, 0.25);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 16px rgba(197, 168, 128, 0.12);
-  color: #C5A880; /* Gold Sparkle */
+  border: 1.5px solid rgba(16, 103, 217, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 0 16px rgba(16, 103, 217, 0.08);
+  color: #1067d9; /* Blue Sparkle */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,9 +23,9 @@
 
 #focusflow-trigger:hover {
   transform: scale(1.08) rotate(15deg);
-  border-color: rgba(197, 168, 128, 0.5);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 24px rgba(197, 168, 128, 0.25);
-  color: #e5ba73;
+  border-color: rgba(16, 103, 217, 0.45);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12), 0 0 24px rgba(16, 103, 217, 0.18);
+  color: #0053b3;
 }
 
 #focusflow-trigger:active {
@@ -45,14 +45,14 @@
 /* Injected Text Selection Clipper Styles */
 #focusflow-select-tooltip {
   position: absolute;
-  background: rgba(10, 10, 12, 0.9);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(197, 168, 128, 0.25);
-  color: #f5f5f7;
+  border: 1px solid rgba(16, 103, 217, 0.25);
+  color: #1d1d1f;
   padding: 8px 16px;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(197, 168, 128, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 0 15px rgba(16, 103, 217, 0.05);
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 12px;
   font-weight: 600;
@@ -67,14 +67,14 @@
 }
 
 #focusflow-select-tooltip:hover {
-  background: rgba(22, 22, 26, 0.95);
-  border-color: rgba(197, 168, 128, 0.5);
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(16, 103, 217, 0.45);
   transform: translateY(-1px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(197, 168, 128, 0.15);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08), 0 0 20px rgba(16, 103, 217, 0.12);
 }
 
 #focusflow-select-tooltip svg {
-  color: #C5A880;
+  color: #1067d9;
 }
 
 @keyframes tooltip-fade {
@@ -87,14 +87,14 @@
   position: fixed;
   bottom: 86px;
   right: 24px;
-  background: rgba(10, 10, 12, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid #10b981;
-  color: #f5f5f7;
+  border: 1.5px solid #2e7d32;
+  color: #1d1d1f;
   padding: 14px 22px;
   border-radius: 14px;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
   font-family: 'Outfit', sans-serif;
   font-size: 13px;
   font-weight: 600;

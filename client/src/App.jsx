@@ -438,7 +438,7 @@ const App = () => {
   );
 
   // Colors for charts
-  const COLORS = ['#C5A880', '#a3c4bc', '#d68c8c', '#e5ba73', '#9B7E4F'];
+  const COLORS = ['#1067d9', '#00d2ff', '#2e7d32', '#ed6c02', '#6200ee'];
   const pieData = stats.slice(0, 5).map(item => ({
     name: item._id,
     value: Math.round(item.totalDuration / 60)
@@ -709,124 +709,142 @@ const App = () => {
           >
             {/* 1. ANALYTICS DASHBOARD VIEW */}
             {activeTab === 'dashboard' && (
-              <div className="flex flex-col gap-6">
-                {/* Stats Widgets */}
-                <motion.div 
-                  className="stats-grid"
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate="show"
-                >
+              <div className="dashboard-grid-container" style={{ display: 'flex', flexDirection: 'row', gap: '24px', flexWrap: 'wrap' }}>
+                
+                {/* Left Column (2/3 width) */}
+                <div className="dashboard-left-column" style={{ flex: '2', minWidth: '320px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  
+                  {/* Stats Widgets */}
                   <motion.div 
-                    variants={itemVariants} 
-                    className="glass-card stat-widget"
-                    whileHover={{ y: -5, boxShadow: "0 12px 28px rgba(197, 168, 128, 0.15)", borderColor: "rgba(197, 168, 128, 0.25)" }}
+                    className="stats-grid"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="show"
+                    style={{ margin: 0 }}
                   >
-                    <div className="stat-info">
-                      <span className="label">Total Focus Time</span>
-                      <span className="value">{Math.floor(totalTrackedMinutes / 60)}h {totalTrackedMinutes % 60}m</span>
-                      <span className="trend">+12.4% from last week</span>
-                    </div>
-                    <div className="stat-icon-wrapper text-primary">
-                      <Clock size={24} />
-                    </div>
+                    <motion.div 
+                      variants={itemVariants} 
+                      className="glass-card stat-widget"
+                      whileHover={{ y: -5, boxShadow: "0 12px 28px rgba(16, 103, 217, 0.08)", borderColor: "rgba(16, 103, 217, 0.15)" }}
+                    >
+                      <div className="stat-info">
+                        <span className="label">Total Focus Time</span>
+                        <span className="value">{Math.floor(totalTrackedMinutes / 60)}h {totalTrackedMinutes % 60}m</span>
+                        <span className="trend">+12.4% from last week</span>
+                      </div>
+                      <div className="stat-icon-wrapper text-primary">
+                        <Clock size={24} />
+                      </div>
+                    </motion.div>
+
+                    <motion.div 
+                      variants={itemVariants} 
+                      className="glass-card stat-widget"
+                      whileHover={{ y: -5, boxShadow: "0 12px 28px rgba(16, 103, 217, 0.08)", borderColor: "rgba(16, 103, 217, 0.15)" }}
+                    >
+                      <div className="stat-info">
+                        <span className="label">Targets Met</span>
+                        <span className="value">{completedTasksCount} / {tasks.length}</span>
+                        <span className="trend text-emerald">Daily Goal Completed</span>
+                      </div>
+                      <div className="stat-icon-wrapper text-emerald">
+                        <CheckSquare size={24} />
+                      </div>
+                    </motion.div>
+
+                    <motion.div 
+                      variants={itemVariants} 
+                      className="glass-card stat-widget"
+                      whileHover={{ y: -5, boxShadow: "0 12px 28px rgba(16, 103, 217, 0.08)", borderColor: "rgba(16, 103, 217, 0.15)" }}
+                    >
+                      <div className="stat-info">
+                        <span className="label">Distractions Prevented</span>
+                        <span className="value">42 attempts</span>
+                        <span className="trend text-emerald">Saved ~1.5 hours today</span>
+                      </div>
+                      <div className="stat-icon-wrapper text-rose">
+                        <Shield size={24} />
+                      </div>
+                    </motion.div>
                   </motion.div>
 
-                  <motion.div 
-                    variants={itemVariants} 
-                    className="glass-card stat-widget"
-                    whileHover={{ y: -5, boxShadow: "0 12px 28px rgba(197, 168, 128, 0.15)", borderColor: "rgba(197, 168, 128, 0.25)" }}
-                  >
-                    <div className="stat-info">
-                      <span className="label">Targets Met</span>
-                      <span className="value">{completedTasksCount} / {tasks.length}</span>
-                      <span className="trend text-emerald">Daily Goal Completed</span>
-                    </div>
-                    <div className="stat-icon-wrapper text-emerald">
-                      <CheckSquare size={24} />
-                    </div>
-                  </motion.div>
-
-                  <motion.div 
-                    variants={itemVariants} 
-                    className="glass-card stat-widget"
-                    whileHover={{ y: -5, boxShadow: "0 12px 28px rgba(197, 168, 128, 0.15)", borderColor: "rgba(197, 168, 128, 0.25)" }}
-                  >
-                    <div className="stat-info">
-                      <span className="label">Distractions Prevented</span>
-                      <span className="value">42 attempts</span>
-                      <span className="trend text-emerald">Saved ~1.5 hours today</span>
-                    </div>
-                    <div className="stat-icon-wrapper text-rose">
-                      <Shield size={24} />
-                    </div>
-                  </motion.div>
-                </motion.div>
-
-                {/* Progress bar glass card */}
-                <motion.div 
-                  className="glass-card flex flex-col gap-4"
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 }}
-                  whileHover={{ y: -2, boxShadow: "0 10px 24px rgba(197, 168, 128, 0.12)", borderColor: "rgba(197, 168, 128, 0.2)" }}
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold text-base">Daily Goal Progress</span>
-                    <span style={{ color: 'var(--primary)' }} className="font-bold">{Math.round(progressPercent)}% completed</span>
-                  </div>
-                  <div className="progress-bar">
-                    <div className="progress" style={{ width: `${progressPercent}%` }}></div>
-                  </div>
-                  <p className="text-slate-500 text-xs font-medium">Daily Target: {Math.round(preferences.dailyGoal / 60)} hours ({preferences.dailyGoal} minutes) tracked in host browsers.</p>
-                </motion.div>
-
-                {/* Dashboard Grid Row 1 */}
-                <motion.div 
-                  className="charts-grid"
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.25 }}
-                >
                   {/* Time Distribution Area Chart */}
                   <motion.div 
                     className="glass-card"
-                    whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(197, 168, 128, 0.12)", borderColor: "rgba(197, 168, 128, 0.2)" }}
+                    whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(16, 103, 217, 0.06)", borderColor: "rgba(16, 103, 217, 0.12)" }}
                   >
                     <div className="chart-header">
                       <h3>Time Distribution (Minutes)</h3>
                       <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">Live Activity Domain Feed</span>
                     </div>
-                    <div className="h-[280px] w-full mt-4">
+                    <div className="h-[260px] w-full mt-4">
                       {stats.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                           <AreaChart data={stats.map(s => ({ name: s._id, Minutes: Math.round(s.totalDuration / 60) }))}>
                             <defs>
                               <linearGradient id="colorMinutes" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#C5A880" stopOpacity={0.4}/>
-                                <stop offset="95%" stopColor="#C5A880" stopOpacity={0}/>
+                                <stop offset="5%" stopColor="#1067d9" stopOpacity={0.4}/>
+                                <stop offset="95%" stopColor="#1067d9" stopOpacity={0}/>
                               </linearGradient>
                             </defs>
-                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(197, 168, 128, 0.08)" vertical={false} />
-                            <XAxis dataKey="name" stroke="#8e8e93" fontSize={11} fontWeight={600} />
-                            <YAxis stroke="#8e8e93" fontSize={11} fontWeight={600} />
+                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 0, 0, 0.04)" vertical={false} />
+                            <XAxis dataKey="name" stroke="#86868b" fontSize={11} fontWeight={600} />
+                            <YAxis stroke="#86868b" fontSize={11} fontWeight={600} />
                             <Tooltip 
-                              contentStyle={{ backgroundColor: '#050506', border: '1px solid rgba(197, 168, 128, 0.15)', borderRadius: '14px' }}
-                              itemStyle={{ color: '#fff' }}
+                              contentStyle={{ backgroundColor: '#ffffff', border: '1px solid rgba(0, 0, 0, 0.08)', borderRadius: '14px', color: '#1d1d1f' }}
+                              itemStyle={{ color: '#1d1d1f' }}
                             />
-                            <Area type="monotone" dataKey="Minutes" stroke="#C5A880" strokeWidth={3} fillOpacity={1} fill="url(#colorMinutes)" />
+                            <Area type="monotone" dataKey="Minutes" stroke="#1067d9" strokeWidth={3} fillOpacity={1} fill="url(#colorMinutes)" />
                           </AreaChart>
                         </ResponsiveContainer>
                       ) : (
-                        <div className="h-full flex items-center justify-center text-slate-500 italic text-sm">No domain logging detected yet. Surf the web to track!</div>
+                        <div className="h-full flex items-center justify-center text-slate-400 italic text-sm">No domain logging detected yet. Surf the web to track!</div>
                       )}
                     </div>
                   </motion.div>
 
-                  {/* Circular Focus Score Gauge (Right side of Row 1) */}
+                  {/* Weekly Focus Hours Bar Chart */}
+                  <motion.div 
+                    className="glass-card"
+                    whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(16, 103, 217, 0.06)", borderColor: "rgba(16, 103, 217, 0.12)" }}
+                  >
+                    <div className="chart-header">
+                      <h3>Weekly Activity Profile</h3>
+                      <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">Rolling 7-Day Performance</span>
+                    </div>
+                    <div className="h-[260px] w-full mt-4 bar-chart-glow">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={weeklyData}>
+                          <defs>
+                            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="#1067d9" stopOpacity={0.8}/>
+                              <stop offset="100%" stopColor="#1067d9" stopOpacity={0.15}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 0, 0, 0.04)" vertical={false} />
+                          <XAxis dataKey="day" stroke="#86868b" fontSize={11} fontWeight={600} />
+                          <YAxis stroke="#86868b" fontSize={11} fontWeight={600} unit="h" />
+                          <Tooltip 
+                            contentStyle={{ backgroundColor: '#ffffff', border: '1px solid rgba(0, 0, 0, 0.08)', borderRadius: '14px', color: '#1d1d1f' }}
+                            itemStyle={{ color: '#1d1d1f' }}
+                            formatter={(value) => [`${value} hours`, 'Focus Duration']}
+                          />
+                          <Bar dataKey="Hours" fill="url(#barGradient)" radius={[6, 6, 0, 0]} maxBarSize={45} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </motion.div>
+
+                </div>
+
+                {/* Right Column (1/3 width) */}
+                <div className="dashboard-right-column" style={{ flex: '1', minWidth: '280px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  
+                  {/* Focus Score Gauge + Goal Progress Inside */}
                   <motion.div 
                     className="glass-card focus-score-card"
-                    whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(197, 168, 128, 0.12)", borderColor: "rgba(197, 168, 128, 0.2)" }}
+                    whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(16, 103, 217, 0.06)", borderColor: "rgba(16, 103, 217, 0.12)" }}
+                    style={{ minHeight: '330px' }}
                   >
                     <div className="chart-header w-full">
                       <h3>Focus Flow Score</h3>
@@ -834,9 +852,9 @@ const App = () => {
                     <div className="focus-score-container mt-2">
                       <svg width="120" height="120" className="focus-score-svg">
                         <defs>
-                          <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#C5A880" />
-                            <stop offset="100%" stopColor="#e5ba73" />
+                          <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#1067d9" />
+                            <stop offset="100%" stopColor="#00d2ff" />
                           </linearGradient>
                         </defs>
                         {/* Background Ring */}
@@ -866,60 +884,32 @@ const App = () => {
                         <span className="focus-score-label">Flow Index</span>
                       </div>
                     </div>
-                    <p className="focus-score-desc">
+                    <p className="focus-score-desc" style={{ marginBottom: '16px' }}>
                       {focusScore >= 80 ? "Optimal Flow. Excellent concentration!" : focusScore >= 60 ? "Steady Focus. Nice steady momentum." : "Needs Attention. Take a deep breath."}
                     </p>
-                  </motion.div>
-                </motion.div>
 
-                {/* Dashboard Grid Row 2 */}
-                <motion.div 
-                  className="charts-grid"
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35 }}
-                >
-                  {/* Weekly Focus Hours Bar Chart */}
-                  <motion.div 
-                    className="glass-card"
-                    whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(197, 168, 128, 0.12)", borderColor: "rgba(197, 168, 128, 0.2)" }}
-                  >
-                    <div className="chart-header">
-                      <h3>Weekly Activity Profile</h3>
-                      <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">Rolling 7-Day Performance</span>
-                    </div>
-                    <div className="h-[280px] w-full mt-4 bar-chart-glow">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={weeklyData}>
-                          <defs>
-                            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="0%" stopColor="#C5A880" stopOpacity={0.8}/>
-                              <stop offset="100%" stopColor="#C5A880" stopOpacity={0.15}/>
-                            </linearGradient>
-                          </defs>
-                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(197, 168, 128, 0.08)" vertical={false} />
-                          <XAxis dataKey="day" stroke="#8e8e93" fontSize={11} fontWeight={600} />
-                          <YAxis stroke="#8e8e93" fontSize={11} fontWeight={600} unit="h" />
-                          <Tooltip 
-                            contentStyle={{ backgroundColor: '#050506', border: '1px solid rgba(197, 168, 128, 0.15)', borderRadius: '14px' }}
-                            itemStyle={{ color: '#fff' }}
-                            formatter={(value) => [`${value} hours`, 'Focus Duration']}
-                          />
-                          <Bar dataKey="Hours" fill="url(#barGradient)" radius={[6, 6, 0, 0]} maxBarSize={45} />
-                        </BarChart>
-                      </ResponsiveContainer>
+                    {/* Progress Bar inside Score Card to balance height alignment */}
+                    <div className="w-full flex flex-col gap-2 pt-4 border-t border-slate-100" style={{ borderTop: '1px solid var(--border)' }}>
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="font-semibold text-slate-500">Daily Target Progress</span>
+                        <span style={{ color: 'var(--primary)' }} className="font-bold">{Math.round(progressPercent)}%</span>
+                      </div>
+                      <div className="progress-bar" style={{ height: '8px' }}>
+                        <div className="progress" style={{ width: `${progressPercent}%` }}></div>
+                      </div>
                     </div>
                   </motion.div>
 
-                  {/* Category breakdown Pie Chart */}
+                  {/* Category Breakdown Pie Chart */}
                   <motion.div 
                     className="glass-card flex flex-col justify-between"
-                    whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(197, 168, 128, 0.12)", borderColor: "rgba(197, 168, 128, 0.2)" }}
+                    whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(16, 103, 217, 0.06)", borderColor: "rgba(16, 103, 217, 0.12)" }}
+                    style={{ minHeight: '250px' }}
                   >
                     <div className="chart-header">
                       <h3>Category Distribution</h3>
                     </div>
-                    <div className="h-[180px] w-full relative flex items-center justify-center">
+                    <div className="h-[130px] w-full relative flex items-center justify-center">
                       {pieData.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                           <PieChart>
@@ -927,8 +917,8 @@ const App = () => {
                               data={pieData}
                               cx="50%"
                               cy="50%"
-                              innerRadius={50}
-                              outerRadius={70}
+                              innerRadius={40}
+                              outerRadius={55}
                               paddingAngle={4}
                               dataKey="value"
                             >
@@ -937,28 +927,55 @@ const App = () => {
                               ))}
                             </Pie>
                             <Tooltip 
-                              contentStyle={{ backgroundColor: '#050506', border: '1px solid rgba(197, 168, 128, 0.15)', borderRadius: '14px' }}
-                              itemStyle={{ color: '#fff' }}
+                              contentStyle={{ backgroundColor: '#ffffff', border: '1px solid rgba(0, 0, 0, 0.08)', borderRadius: '14px', color: '#1d1d1f' }}
+                              itemStyle={{ color: '#1d1d1f' }}
                             />
                           </PieChart>
                         </ResponsiveContainer>
                       ) : (
-                        <div className="text-slate-500 italic text-xs">No chart statistics logged.</div>
+                        <div className="text-slate-400 italic text-xs">No chart statistics logged.</div>
                       )}
                     </div>
-                    <div className="flex flex-col gap-1.5 mt-2 overflow-y-auto max-h-[100px]">
+                    <div className="flex flex-col gap-1 mt-1 overflow-y-auto max-h-[70px]">
                       {pieData.map((entry, index) => (
-                        <div key={index} className="flex justify-between items-center text-[11px]">
-                          <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
-                            <span className="text-slate-300 font-semibold truncate max-w-[120px]">{entry.name}</span>
+                        <div key={index} className="flex justify-between items-center text-[10px]">
+                          <div className="flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+                            <span className="text-slate-600 font-semibold truncate max-w-[100px]">{entry.name}</span>
                           </div>
-                          <span className="font-bold text-slate-400">{entry.value} mins</span>
+                          <span className="font-bold text-slate-500">{entry.value}m</span>
                         </div>
                       ))}
                     </div>
                   </motion.div>
-                </motion.div>
+
+                  {/* Smart Insights Widget */}
+                  <motion.div 
+                    className="glass-card flex flex-col gap-3"
+                    whileHover={{ y: -3, boxShadow: "0 10px 24px rgba(16, 103, 217, 0.06)", borderColor: "rgba(16, 103, 217, 0.12)" }}
+                    style={{ minHeight: '190px' }}
+                  >
+                    <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider">
+                      <Sparkles size={14} /> Smart Insights
+                    </div>
+                    <div className="flex flex-col gap-2 text-xs text-slate-600 font-medium">
+                      <div className="flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5"></span>
+                        <span>Daily focus efficiency is at <strong>{focusScore}%</strong>. Keep up this momentum!</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5"></span>
+                        <span>Blocked domains prevented <strong>12</strong> session distraction attempts.</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5"></span>
+                        <span>Your prime flow state occurred during study/coding blocks.</span>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                </div>
+
               </div>
             )}
 
