@@ -697,3 +697,42 @@ header {
 .pomo-tips strong {
   color: var(--primary);
 }
+
+/* --- Extension Reloaded Overlay --- */
+.reload-overlay-icon {
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.reload-overlay-title {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.reload-overlay-text {
+  margin: 0 0 16px 0;
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.reload-overlay-btn {
+  background: #eab308;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(234, 179, 8, 0.2);
+}
+
+.reload-overlay-btn:hover {
+  background: #ca8a04;
+}
+

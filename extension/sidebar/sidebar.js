@@ -5,12 +5,27 @@ let currentTabDomain = '';
 let currentTabUrl = '';
 let currentTabTitle = '';
 
+let contextInvalidated = false;
+
 function isContextValid() {
+  if (contextInvalidated) return false;
   try {
     return typeof chrome !== 'undefined' && chrome.runtime && !!chrome.runtime.id;
   } catch (e) {
+    contextInvalidated = true;
     return false;
   }
+}
+
+// Establish port to listen for extension reloads/invalidation
+try {
+  const port = chrome.runtime.connect({ name: 'focusflow-sidebar-keepalive' });
+  port.onDisconnect.addListener(() => {
+    contextInvalidated = true;
+    handleInvalidatedContext();
+  });
+} catch (e) {
+  contextInvalidated = true;
 }
 
 let isInvalidated = false;
@@ -43,10 +58,10 @@ function handleInvalidatedContext() {
   overlay.style.zIndex = '10000';
   overlay.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
   overlay.innerHTML = `
-    <div style="font-size: 32px; margin-bottom: 16px;">🔄</div>
-    <h3 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #1f2937;">Extension Reloaded</h3>
-    <p style="margin: 0 0 16px 0; font-size: 12px; color: #6b7280; line-height: 1.5;">FocusFlow Extension has been updated or reloaded. Please refresh your page to restore the assistant sidebar.</p>
-    <button id="refresh-page-btn" style="background: #eab308; color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s; outline: none; box-shadow: 0 2px 4px rgba(234, 179, 8, 0.2);">
+    <div class="reload-overlay-icon">🔄</div>
+    <h3 class="reload-overlay-title">Extension Reloaded</h3>
+    <p class="reload-overlay-text">FocusFlow Extension has been updated or reloaded. Please refresh your page to restore the assistant sidebar.</p>
+    <button id="refresh-page-btn" class="reload-overlay-btn">
       Refresh Page
     </button>
   `;

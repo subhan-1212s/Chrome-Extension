@@ -1,10 +1,14 @@
 let BACKEND_API = 'https://chrome-extension-ts0n.onrender.com/api';
 let CURRENT_USER = 'user_demo@example.com';
 
+let contextInvalidated = false;
+
 function isContextValid() {
+  if (contextInvalidated) return false;
   try {
     return typeof chrome !== 'undefined' && chrome.runtime && !!chrome.runtime.id;
   } catch (e) {
+    contextInvalidated = true;
     return false;
   }
 }
@@ -372,3 +376,15 @@ document.documentElement.setAttribute('data-focusflow-extension', 'true');
 
 // Launch Injection
 init();
+
+// Setup connection port to detect invalidation
+try {
+  const port = chrome.runtime.connect({ name: 'focusflow-content-keepalive' });
+  port.onDisconnect.addListener(() => {
+    contextInvalidated = true;
+    destroy();
+  });
+} catch (e) {
+  contextInvalidated = true;
+  destroy();
+}
