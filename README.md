@@ -23,6 +23,7 @@ A premium productivity tracking system that monitors web usage, blocks distracti
 - **Frontend**: React, Vite, Framer Motion, Recharts, Lucide Icons.
 - **Extension**: Manifest V3, JavaScript, CSS3.
 - **Backend**: Node.js, Express.
+- **Api**: Gemini API, Chrome Extension APIs (MV3)
 - **Database**: MongoDB, Mongoose.
 
 ## 📦 Installation
